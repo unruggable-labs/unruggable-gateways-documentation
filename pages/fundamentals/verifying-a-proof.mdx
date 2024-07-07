@@ -1,0 +1,73 @@
+## Verifying a proof against a known state root
+
+The process of verifying a proof returned using (for example) `eth_getProof` against a known state root involves several steps:
+
+### Steps to Verify a Proof
+
+1. **Retrieve the Proof:**
+   Use the `eth_getProof` JSON-RPC method to retrieve the proof for a specific account or storage slot. This proof includes the account data or storage value, along with the necessary Merkle Patricia trie nodes to prove the inclusion or exclusion of the data in the respective state trie.
+
+2. **Understand the State Root:**
+   The state root is a single 32-byte value representing the root of the Merkle Patricia trie of the Ethereum state. This value is included in the block header and uniquely identifies the state of the entire Ethereum network at a particular block height.
+
+3. **Parse the Proof:**
+   The proof returned by `eth_getProof` contains:
+   - The account data (nonce, balance, storageRoot, codeHash) if it's an account proof.
+   - The storage value if it's a storage proof.
+   - The Merkle Patricia trie nodes required to traverse from the state root to the specific account or storage slot.
+
+4. **Reconstruct the Trie Path:**
+   Using the provided trie nodes, reconstruct the path in the Merkle Patricia trie from the state root to the target node (account or storage slot). This involves decoding the trie nodes and ensuring each node correctly hashes to its parent node until you reach the state root.
+
+5. **Verify the Data:**
+   - For an account proof, verify that the account data (nonce, balance, storageRoot, codeHash) matches the data in the last node of the reconstructed path.
+   - For a storage proof, verify that the storage value matches the value in the last node of the reconstructed path.
+
+6. **Hash Calculation:**
+   At each step of the path reconstruction, calculate the hash of the current node and compare it to the expected hash stored in the parent node. This ensures the integrity of each step in the path.
+
+7. **Compare with the State Root:**
+   Finally, compare the root hash obtained from the reconstructed trie path to the known state root. If they match, the proof is valid and the data is confirmed to be part of the state represented by the state root.
+
+### Example in Detail
+
+Assume you want to verify the proof for an account. The steps are as follows:
+
+1. **Call `eth_getProof`:**
+   ```json
+   {
+     "jsonrpc": "2.0",
+     "method": "eth_getProof",
+     "params": [
+       "0xAccountAddress",
+       ["0xStorageSlot1", "0xStorageSlot2"],  // if storage proof is also needed
+       "latest"
+     ],
+     "id": 1
+   }
+   ```
+
+2. **Parse the Response:**
+   The response includes:
+   - `balance`
+   - `nonce`
+   - `storageHash`
+   - `codeHash`
+   - `accountProof` (array of RLP-encoded nodes)
+   - `storageProof` (array of objects, each containing `key`, `value`, `proof`)
+
+3. **Reconstruct the Trie Path:**
+   Using the `accountProof`, decode each node and reconstruct the path from the state root to the account leaf node. Ensure each node hashes correctly to its parent.
+
+4. **Verify Account Data:**
+   Check that the `balance`, `nonce`, `storageHash`, and `codeHash` in the leaf node match the values provided.
+
+5. **Hash Calculation and Verification:**
+   Calculate the hash of each node and ensure it matches the expected hash from its parent node.
+
+6. **Compare with State Root:**
+   Compare the root hash obtained from the trie reconstruction with the known state root.
+
+If all these checks pass, the proof is verified, confirming that the account or storage slot data is part of the state represented by the state root.
+
+---

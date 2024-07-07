@@ -1,0 +1,29 @@
+# `eth_getProof`
+
+The proof returned by `eth_getProof` RPC call consists of several components:
+
+1. **`accountProof`**: 
+   - An array of rlp-serialized MerkleTree-Nodes
+   - Proves the inclusion of the queried account in the state trie
+
+2. **`balance`**: 
+   - The balance of the account at the specified block
+
+3. **`codeHash`**: 
+   - The hash of the code of the account at the specified block
+   - `0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470` for non-contract accounts
+
+4. **`nonce`**: 
+   - The transaction count of the account at the specified block
+
+5. **`storageHash`**: 
+   - The hash of the storage trie root of the account
+
+6. **`storageProof`**: 
+   - An array of storage-entries as requested
+   - Each entry contains:
+     - `key`: The requested storage key
+     - `value`: The storage value
+     - `proof`: An array of rlp-serialized MerkleTree-Nodes proving the inclusion of the storage value
+
+This proof allows verification of account and storage data without needing the entire state trie. It's particularly useful for light clients and cross-chain interactions.

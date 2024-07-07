@@ -1,0 +1,182 @@
+### OP_DEBUG
+
+Used for debugging purposes. Outputs machine state to the console. Javascript only.
+
+| Int | JS | Solidity |
+|--|--|--|
+|255 | `debug(label: string)` |  N/A |
+                                  
+### OP_TARGET
+
+- Pops the top item off the stack and uses it for operations that follow. 
+- Resets the slot position to 0.
+
+ Int | JS | Solidity |
+|--|--|--|
+| 1 | `target()` |                           |
+
+### OP_SET_OUTPUT
+
+- Pops the value at the top of the stack, and sets it as an output (at the specified index).                          
+
+ Int | JS | Solidity |
+|--|--|--|
+| 2 | `setOutput(i: number)` |
+
+### OP_EVAL
+
+Evaluates an expression or operation.                          
+
+ Int | JS | Solidity |
+|--|--|--|
+| 3 | `eval(opts: \{success?: boolean; failure?: boolean; acquire?: boolean; back?: number; \} = \{\})` |
+
+### OP_REQ_NONZERO
+
+- Requires the value to offset (by `back`) from the head of the stack to be non-zero.
+- Defaults to the value at the head of the stack.
+- If zero, sets an exit code and returns. This influences machine outcome subject to specified flags.                                 
+
+ Int | JS | Solidity |
+|--|--|--|
+| 10 | `requireNonzero(back = 0)` |
+
+### OP_REQ_CONTRACT
+
+- Checks if the current target is a contract address.                
+- If zero, sets an exit code and returns. This influences machine outcome subject to specified flags.         
+
+ Int | JS | Solidity |
+|--|--|--|
+| 11 | `requireContract()` |
+
+### OP_READ_SLOTS
+
+- Reads `n` slots from the current target starting from the current `slot` defined in the machin.      
+
+ Int | JS | Solidity |
+|--|--|--|
+| 20 | `read(n = 1)` |
+
+### OP_READ_BYTES
+
+- Reads a bytes value from storage of the current `target`.
+- Subject to the storage rules for [bytes/string](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html#bytes-and-string).                       
+
+ Int | JS | Solidity |
+|--|--|--|
+| 21 | `readBytes()` |
+
+### OP_READ_ARRAY
+
+- Reads array values from storage of the current `target`.                                   
+
+ Int | JS | Solidity |
+|--|--|--|
+| 22 | `readArray(step: number)` |
+
+### OP_SLOT_ZERO
+
+- Resets the machine `slot` to 0                             
+
+ Int | JS | Solidity |
+|--|--|--|
+| 30 | `zeroSlot()` |
+
+### OP_SLOT_ADD
+
+- Increments the `slot` in the virtual machine by the value at the top of the stack.                               
+
+ Int | JS | Solidity |
+|--|--|--|
+| 31 | `addSlot()` |
+
+### OP_SLOT_FOLLOW
+
+- Generates and updates the the machine `slot` ID for a mapping or array utilising the value at the top of the stack as the key/index.                           
+
+ Int | JS | Solidity |
+|--|--|--|
+| 32 | `follow()` |
+
+### OP_PUSH_INPUT
+
+- Pushes a value from the input register onto the stack.
+
+- Pushes an input value to the input register.
+- The input index is pushed onto the ops register.      
+- Helper methods exist for different types.                    
+
+ Int | JS | Solidity |
+|--|--|--|
+| 40 | 
+`pushInput(i: number)`
+`pushStr(s: string)`
+`pushBytes(v: BytesLike)`
+`push(x: BigNumberish)`
+ |
+
+### OP_PUSH_OUTPUT
+
+- Pushes an output at index `i` onto the stack.                         
+
+ Int | JS | Solidity |
+|--|--|--|
+| 41 | `pushOutput(i: number)` |
+
+### OP_PUSH_SLOT
+
+- Pushes the current virtual machine `slot` onto the stack.                    
+
+ Int | JS | Solidity |
+|--|--|--|
+| 42 | `pushSlot()` |
+
+### OP_PUSH_TARGET
+
+- Pushes the current virtual machine `target` address onto the stack.                          
+
+ Int | JS | Solidity |
+|--|--|--|
+| 43 | `pushTarget()` |
+
+### OP_DUP
+
+- Pushes the stack item offset from the head by `back` to the top of the stack.                   
+
+ Int | JS | Solidity |
+|--|--|--|
+| 50 | `dup(back = 0)` |
+
+### OP_POP
+
+- Removes the top stack item.                                    
+
+ Int | JS | Solidity |
+|--|--|--|
+| 51 | `pop()` |
+
+### OP_KECCAK
+
+- Computes the Keccak-256 hash of the item at the head of the stack.
+- Replaces it on the stack.                   
+
+ Int | JS | Solidity |
+|--|--|--|
+| 60 | `keccak()` |
+
+### OP_CONCAT
+
+- Pops and concatenates the last `back` items on the stack.                                      
+
+ Int | JS | Solidity |
+|--|--|--|
+| 61 | `concat(back: number)` |
+
+### OP_SLICE
+
+- Slices `n` bytes from the value at the head of the stack from offset `x`.
+
+ Int | JS | Solidity |
+|--|--|--|
+| 62 | `slice(x: number, n: number)` | <pre><code>\{ JSON: <br />&emsp; ["Key1":"Value1",<br />&emsp; "Key2":"Value2"] <br />\}</code></pre> |                                

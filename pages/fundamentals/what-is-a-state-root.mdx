@@ -1,0 +1,19 @@
+# State roots
+
+An Ethereum state root is a crucial component of Ethereum's blockchain architecture.
+
+1. **Definition**: It's a 256-bit hash that represents the entire state of the Ethereum network at a specific block.
+
+2. **Purpose**: The state root acts as a cryptographic summary of all accounts, balances, contract code, and storage on the Ethereum network.
+
+3. **Merkle Patricia Trie**: It's the root hash of a special data structure called a Merkle Patricia Trie, which efficiently stores all state information.
+
+4. **Integrity**: It allows for quick verification of the entire state without needing to download and process all data.
+
+5. **Block headers**: Each Ethereum block contains a state root, ensuring consensus on the network's state.
+
+6. **Lightweight clients**: Enables light clients to verify transactions without storing the entire blockchain.
+
+7. **State transitions**: When transactions are processed, they modify the state, resulting in a new state root for the next block.
+
+This mechanism is fundamental to Ethereum's ability to maintain a secure and verifiable record of all accounts and transactions.

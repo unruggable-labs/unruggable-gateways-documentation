@@ -1,0 +1,18 @@
+# L2 state root commitments
+
+Some L2s (for example [Optimism](https://www.optimism.io/) and [Arbitrum](https://arbitrum.io/)) periodically commit their state root to the Ethereum mainnet (L1). This root represents the entire L2 state.
+
+By anchoring their state roots on L1, L2s can inherit Ethereum's security.
+
+L2s can process many transactions and only need to commit the final state root to L1. This significantly reduces L1 gas costs.
+
+Users can then verify inclusion proofs of L2 state by verifying their inclusion in the Merkle trie represented by the state roots posted on Ethereum mainnet.
+
+## Rollup addresses
+
+The (mainnet) rollup contracts for a number of popular L2s (as of July 3rd 2024) are listed below:
+
+| Rollup Solution               | Contract Name | Contract Address                                     Link                                                                 |
+|------------------------------|-----|-------------------------------------------------------------|
+| Optimism                 | OptimismPortalProxy | [`0xbEb5Fc579115071764c7423A4f12eDde41f106Ed`](https://etherscan.io/address/0xbEb5Fc579115071764c7423A4f12eDde41f106Ed)                 |
+| Arbitrum One                   | RollupProxy | [`0x5eF0D09d1E6204141B4d37530808eD19f60FBa35`](https://etherscan.io/address/0x5eF0D09d1E6204141B4d37530808eD19f60FBa35)                 |

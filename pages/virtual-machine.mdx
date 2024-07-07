@@ -1,0 +1,36 @@
+import Link from 'next/link'
+
+## Virtual Machine
+
+### Commands
+
+A virtual machine command maintains two registers:
+
+- An operations register (`ops`)
+- An inputs register (`inputs`)
+
+The <Link href="/op-code-reference">OP codes</Link> exposed by the public API define operations that the virtual machine interprets.
+
+Operations can operate on/using inputs in the inputs register.
+
+In the context of reading data from EVM compatabile blockchains the majority of the OP codes partake in the generation (and manipulation) of storage slot IDs and the extraction/post processing of the data contained within.
+
+### Requests
+
+A virtual machine request is a command with the explicit specification of the number of expected outputs.
+
+Requests can nest additional commands for more complicated use cases.
+
+### Internal state
+
+The virtual machine maintains an internal state that constitutes:
+
+- `target` - the current target contract for which we are fetching data.
+- `slot` - the storage slot ID for which we are fetching data.
+- `stack` - The virtual machine stack.  It provides a structured way to handle execution states and data, facilitating efficient and organized program execution within the VM.
+- `exitCode` - an exit code that is handled dependant on user specified flags.
+
+- `needs` - an array keeps track of required storage/account proofs.
+- `outputs` - an array holds lazily resolved outputs.
+
+In the Typescript implementation this state is represented by the `MachineState` class.
