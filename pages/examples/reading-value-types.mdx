@@ -1,0 +1,20 @@
+
+As outlined in the [solidity storage layout documentation](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html), *"Except for dynamically-sized arrays and mappings (see below), data is stored contiguously item after item starting with the first state variable, which is stored in slot 0."*
+
+As such a contract defining a `uint256` as such:
+
+```solidity filename="Example.sol"
+contract X {
+    uint256 slot0 = 123;
+}
+```
+
+can have its value read as follows:
+
+```js filename="example.js"
+    new EVMRequest(OUTPUT_COUNT)        //Specify the number of outputs
+      .setTarget(CONTRACT_ADDRESS)      //Specify the contract address
+      .setSlot(0)                       //Specify the slot number
+      .read()                           //Read the value
+      .setOutput(0)                     //Set it at output index 0
+```

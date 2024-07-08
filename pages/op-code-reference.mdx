@@ -13,7 +13,7 @@ Used for debugging purposes. Outputs machine state to the console. Javascript on
 
  Int | JS | Solidity |
 |--|--|--|
-| 1 | `target()` |                           |
+| 1 | `target()` |             `target(EVMRequest memory r)`              |
 
 ### OP_SET_OUTPUT
 
@@ -21,7 +21,7 @@ Used for debugging purposes. Outputs machine state to the console. Javascript on
 
  Int | JS | Solidity |
 |--|--|--|
-| 2 | `setOutput(i: number)` |
+| 2 | `setOutput(i: number)` | `setOutput(EVMRequest memory r, uint8 i)` |
 
 ### OP_EVAL
 

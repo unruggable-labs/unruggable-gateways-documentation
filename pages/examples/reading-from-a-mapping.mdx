@@ -1,0 +1,23 @@
+For a contract defined as follows:
+
+```solidity filename="Example.sol"
+    contract X {
+        mapping(uint256=>string) exampleMapping;          
+
+        constructor() {
+            exampleMapping[42] = "string";
+        }
+    }
+```
+
+The value at index `42` can be read as follows:
+
+```js filename="example.js"
+    new EVMRequest(OUTPUT_COUNT)        //Specify the number of outputs
+        .setTarget(C.target)            //Specify the contract address
+        .setSlot(0)                     //Specify the slot number
+        .push(MAPPING_KEY)              //Push the key onto the stack
+        .follow()                       //Follow that key 
+        .readBytes()                    //Read the bytes
+        .setOutput(0)                   //Set it at output index 0
+```
