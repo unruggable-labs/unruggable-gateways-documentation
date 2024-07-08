@@ -13,7 +13,7 @@ Used for debugging purposes. Outputs machine state to the console. Javascript on
 
  Int | JS | Solidity |
 |--|--|--|
-| 1 | `target()` |             `target(EVMRequest memory r)`              |
+| 1 | `target()` |             `target()`              |
 
 ### OP_SET_OUTPUT
 
@@ -21,7 +21,7 @@ Used for debugging purposes. Outputs machine state to the console. Javascript on
 
  Int | JS | Solidity |
 |--|--|--|
-| 2 | `setOutput(i: number)` | `setOutput(EVMRequest memory r, uint8 i)` |
+| 2 | `setOutput(i: number)` | `setOutput(uint8 i)` |
 
 ### OP_EVAL
 
@@ -29,7 +29,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 3 | `eval(opts: \{success?: boolean; failure?: boolean; acquire?: boolean; back?: number; \} = \{\})` |
+| 3 | `eval(opts: \{success?: boolean; failure?: boolean; acquire?: boolean; back?: number; \} = \{\})` | `eval(uint8 flags)` / `eval(uint8 flags, uint8 back)` |
 
 ### OP_REQ_NONZERO
 
@@ -39,7 +39,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 10 | `requireNonzero(back = 0)` |
+| 10 | `requireNonzero(back = 0)` | `requireNonzero(uint8 back)` |
 
 ### OP_REQ_CONTRACT
 
@@ -48,7 +48,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 11 | `requireContract()` |
+| 11 | `requireContract()` | `requireContract()` |
 
 ### OP_READ_SLOTS
 
@@ -56,7 +56,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 20 | `read(n = 1)` |
+| 20 | `read(n = 1)` | `read()` / `read(uint8 n)` |
 
 ### OP_READ_BYTES
 
@@ -65,7 +65,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 21 | `readBytes()` |
+| 21 | `readBytes()` | `readBytes()` |
 
 ### OP_READ_ARRAY
 
@@ -73,7 +73,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 22 | `readArray(step: number)` |
+| 22 | `readArray(step: number)` | `readArray(uint8 step)` |
 
 ### OP_SLOT_ZERO
 
@@ -81,7 +81,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 30 | `zeroSlot()` |
+| 30 | `zeroSlot()` | `zeroSlot()` |
 
 ### OP_SLOT_ADD
 
@@ -89,7 +89,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 31 | `addSlot()` |
+| 31 | `addSlot()` | `addSlot()` |
 
 ### OP_SLOT_FOLLOW
 
@@ -97,7 +97,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 32 | `follow()` |
+| 32 | `follow()` | `follow()` |
 
 ### OP_PUSH_INPUT
 
@@ -109,12 +109,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 40 | 
-`pushInput(i: number)`
-`pushStr(s: string)`
-`pushBytes(v: BytesLike)`
-`push(x: BigNumberish)`
- |
+| 40 | `pushInput(i: number)` / `pushStr(s: string)` / `pushBytes(v: BytesLike)` / `push(x: BigNumberish)` | `push(uint256 x)` / `push(address x)` / `push(bytes32 x)` / `push(string memory s)` / `push(bytes memory v)` / `push(EVMRequest memory x)` |
 
 ### OP_PUSH_OUTPUT
 
@@ -122,7 +117,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 41 | `pushOutput(i: number)` |
+| 41 | `pushOutput(i: number)` | `pushOutput(uint8 i)` |
 
 ### OP_PUSH_SLOT
 
@@ -130,7 +125,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 42 | `pushSlot()` |
+| 42 | `pushSlot()` | `readSlot()` |
 
 ### OP_PUSH_TARGET
 
@@ -138,7 +133,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 43 | `pushTarget()` |
+| 43 | `pushTarget()` | `readTarget()` |
 
 ### OP_DUP
 
@@ -146,7 +141,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 50 | `dup(back = 0)` |
+| 50 | `dup(back = 0)` | `dup(uint8 back)` |
 
 ### OP_POP
 
@@ -154,7 +149,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 51 | `pop()` |
+| 51 | `pop()` | `pop()` |
 
 ### OP_KECCAK
 
@@ -163,7 +158,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 60 | `keccak()` |
+| 60 | `keccak()` | `keccak()` |
 
 ### OP_CONCAT
 
@@ -171,7 +166,7 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 61 | `concat(back: number)` |
+| 61 | `concat(back: number)` | `concat(uint8 n)` |
 
 ### OP_SLICE
 
@@ -179,4 +174,4 @@ Evaluates an expression or operation.
 
  Int | JS | Solidity |
 |--|--|--|
-| 62 | `slice(x: number, n: number)` | <pre><code>\{ JSON: <br />&emsp; ["Key1":"Value1",<br />&emsp; "Key2":"Value2"] <br />\}</code></pre> |                                
+| 62 | `slice(x: number, n: number)` | `slice(uint16 pos, uint16 len)` |          
