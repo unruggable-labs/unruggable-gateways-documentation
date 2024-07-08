@@ -6,7 +6,12 @@ export default {
     </>
   ),
   project: {
-    link: 'https://github.com/shuding/nextra'
+    link: 'https://github.com/unruggable-labs/evmgateway-v2/'
+  },
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s – Gateway Documentation',
+    }
   }
   // ... other theme options
 }
