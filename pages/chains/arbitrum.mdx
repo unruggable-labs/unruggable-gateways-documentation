@@ -1,0 +1,20 @@
+# Arbitrum
+
+[Arbitrum](https://arbiscan.io/) is an EVM compatible Optimistic rollup.
+
+[Arbitrum contract addresses](https://docs.arbitrum.io/build-decentralized-apps/reference/useful-addresses).
+
+## High level overview
+
+
+### Context
+
+The context used is returned from the `latestConfirmed()` method of the Arbitrum rollup contract. The integer returned is the ID of the latest confirmed `RBlock` which represents a batch of transactions or state transitions that are bundled together and committed to the Ethereum blockchain.
+
+### Commit
+
+Arbitrum has a fully implemented fault proof system so it is not neccesarily the case that a `RBlock` posted to L1 is verified and finalised. 
+
+The commit body contains the RLP encoded block data as well as the `sendRoot` (The Merkle root of the outbox tree state) for the RBlock in context.
+
+This process is outlined in the Arbitrum documentation: [How can I verify that an L2 block has been processed as part of a specific RBlock?](https://docs.arbitrum.io/for-devs/troubleshooting-building#how-can-i-verify-that-an-l2-block-has-been-processed-as-part-of-a-specific-rblock)

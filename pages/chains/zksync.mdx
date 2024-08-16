@@ -1,0 +1,41 @@
+# zkSync
+
+The zkSync documentation outlines the [addresses for their L1 contracts](https://docs.zksync.io/build/developer-reference/era-contracts/l1-contracts).
+
+
+
+## High level overview
+
+The zkSync [rollup contract](https://etherscan.io/address/0x32400084c286cf3e17e7b677ea9583e60a000324#code0) implements the diamond proxy pattern meaning that the implementations of different functions are handled by facet contracts to which queries are directed. Contract storage is maintained at the root proxy level.
+
+The Typescript Prover implementation used by OP stack chains is `ZKSyncProver.ts`. 
+
+
+### Context
+
+The context for zkSync is the last submitted batch number which is fetched by calling `getTotalBatchesExecuted` on the rollup contract.
+
+### Commit
+
+The `abiEncodedBatch` is of the format:
+
+```
+    [
+        'uint64', // batchNumber
+        'bytes32', // batchHash
+        'uint64', // indexRepeatedStorageChanges
+        'uint256', // numberOfLayer1Txs
+        'bytes32', // priorityOperationsHash
+        'bytes32', // l2LogsTreeRoot;
+        'uint256', // timestamp
+        'bytes32', // commitment
+    ]
+```
+
+### Prover
+
+zkSync utilises the `ZKSyncProver`.
+
+zkSync implements the [`zks_getProof`](https://docs.zksync.io/build/api-reference/zks-rpc#zks_getproof) RPC method which takes an L1 batch number (rather than a block number).
+
+In ZKSync, the entire state of the network is represented using a Sparse Merkle Tree. Proofs are verified using a Solidity adaptation of the SparseMerkleProof implementation in the zkSync rust codebase (originally ported by [Clave](https://github.com/getclave/zksync-storage-proofs/blob/main/packages/zksync-storage-contracts/src/SparseMerkleTree.sol)).

@@ -1,10 +1,12 @@
 {
   "index": "Introduction",
   "getting-started": "Getting Started",
+  "concepts": "Concepts",
   "virtual-machine": "Virtual Machine",
   "op-code-reference": "OP Code Reference",
   "verifier-deployments": "Verifier deployments",
   "fundamentals": "Fundamentals",
+  "chains": "Chain support",
   "examples": "Examples",
   "running-a-gateway": "Running a gateway",
   "contributing": "Contributing",

@@ -1,0 +1,21 @@
+# Linea
+
+Linea is an EVM compatible zero knowledge (zk) rollup chain built by Consensys.
+
+## High level overview
+
+Linea uses a Spare Merkle Trie (SPT) data structure.
+
+The Typescript Prover implementation used by OP stack chains is `LineaProver.ts`. 
+
+### Context
+
+The Linea verifier specifies the finalised L1 block number as the context for virtual machine requests.
+
+### Commit
+
+The Linea `L1MessageService` [contract](https://etherscan.io/address/0xd19d4b5d358258f05d7b411e21a1460d11b0876f) has `stateRootHashes` method that maps a `blockNumber` to a state root. The state root makes up the body of the commit for Linea.
+
+### Prover
+
+Linea uses the `LineaProver`. Linea implements the `linea_getProof` RPC method that returns proof data 
