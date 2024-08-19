@@ -1,6 +1,14 @@
 # zkSync
 
-The zkSync documentation outlines the [addresses for their L1 contracts](https://docs.zksync.io/build/developer-reference/era-contracts/l1-contracts).
+<img src="/images/chains/zkSync.png" alt="Scroll zk-EVM L2" style={{"width":"300px", margin: "0px auto;", marginTop: "20px"}} />
+
+## Summary
+
+[zkSync](https://zksync.io/) is a zero knowledge (ZK) rollup with [native account abstraction](https://docs.zksync.io/build/start-coding/quick-start/paymasters-introduction).
+
+- The zkSync documentation outlines the [addresses for their L1 contracts](https://docs.zksync.io/build/developer-reference/era-contracts/l1-contracts).
+- Their chain explorer can be found [here](https://explorer.zksync.io/).
+- The gateway and verifier solution developed for the mainnet chain can also be used for other [ZKChains](https://blog.matter-labs.io/introduction-to-hyperchains-fdb33414ead7).
 
 
 
@@ -8,12 +16,12 @@ The zkSync documentation outlines the [addresses for their L1 contracts](https:/
 
 The zkSync [rollup contract](https://etherscan.io/address/0x32400084c286cf3e17e7b677ea9583e60a000324#code0) implements the diamond proxy pattern meaning that the implementations of different functions are handled by facet contracts to which queries are directed. Contract storage is maintained at the root proxy level.
 
-The Typescript Prover implementation used by OP stack chains is `ZKSyncProver.ts`. 
+The [`ExecutorFacet`](https://docs.zksync.io/build/developer-reference/era-contracts/l1-contracts#executorfacet) handles the three step process by which batches of L2 transactions are committed (`commitBatches`), proven (`proveBatches`), and then finalized (`executeBatches`). After finalization state roots are available on L1 which we prove against.
 
 
 ### Context
 
-The context for zkSync is the last submitted batch number which is fetched by calling `getTotalBatchesExecuted` on the rollup contract.
+The [context](/concepts#context) for zkSync is the last submitted batch number which is fetched by calling `getTotalBatchesExecuted` on the rollup contract.
 
 ### Commit
 
@@ -32,10 +40,27 @@ The `abiEncodedBatch` is of the format:
     ]
 ```
 
-### Prover
+### Verification
 
-zkSync utilises the `ZKSyncProver`.
+The Unruggable gateway Typescript prover implementation used for ZKChains is `ZKSyncProver.ts`. 
 
-zkSync implements the [`zks_getProof`](https://docs.zksync.io/build/api-reference/zks-rpc#zks_getproof) RPC method which takes an L1 batch number (rather than a block number).
+> "ZKsync Era employs a different Merkle tree structure, necessitating a unique approach to proof verification. Unlike Ethereum's two-level hexadecimal trie—where the top level maps to accounts and the bottom to account storage slots—Era uses a single-level, full binary tree with 256-bit keys."
+
+zkSync implements the [`zks_getProof`](https://docs.zksync.io/build/api-reference/zks-rpc#zks_getproof) RPC method which takes an L1 batch number (rather than a block number), and returns appropriate proofs that are verified in our `ZKSyncVerifier.sol` contract.
 
 In ZKSync, the entire state of the network is represented using a Sparse Merkle Tree. Proofs are verified using a Solidity adaptation of the SparseMerkleProof implementation in the zkSync rust codebase (originally ported by [Clave](https://github.com/getclave/zksync-storage-proofs/blob/main/packages/zksync-storage-contracts/src/SparseMerkleTree.sol)).
+
+
+### Notes
+
+#### Use Proxy pattern
+
+zkSync uses the era Virtual machine. It may have bugs.
+
+> "We recommend using the Proxy pattern for a few months after your first deployment on ZKsync Era, even if you plan to migrate to an immutable contract in the future."
+
+#### Contract deployment and Ethereum Differences
+
+Contract deployment follows different paradigms to L1 Ethereum. There are [additional considerations](https://docs.zksync.io/build/developer-reference/ethereum-differences/contract-deployment).
+
+More generally whilst EVM compatabile, zkSync does [fundamentally differ](https://docs.zksync.io/build/developer-reference/ethereum-differences/evm-instructions) from Ethereum mainnet in many ways that contract deployers/chain users should be aware of.

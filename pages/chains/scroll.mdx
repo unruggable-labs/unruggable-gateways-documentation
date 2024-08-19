@@ -1,16 +1,51 @@
 # Scroll
 
-[Scroll contract addresses](https://docs.scroll.io/en/developers/scroll-contracts/)
+<img src="/images/chains/scroll.png" alt="Scroll zk-EVM L2" style={{"width":"300px", margin: "0px auto;", marginTop: "20px"}} />
 
-The undocumented [ScrollChainCommitmentVerifier](https://etherscan.io/address/0xC4362457a91B2E55934bDCb7DaaF6b1aB3dDf203#readContract) returns addresses for the Scroll rollup and the address of poseidon hash contract.
+## Summary 
 
-Their verification contracts were [auditted by OpenZeppelin](https://blog.openzeppelin.com/scroll-zktrieverifier-audit).
+[Scroll](https://scroll.io/) is a L2 blockchain that utilises a zk-EVM to generate execution proofs that are posted to L1 Ethereum. 
+
+- The Scroll chain has a **3 second block time**.
+- [ScrollScan](https://scrollscan.com/) is the block explorer for Scroll.
+- The Scroll [architecture documentation](https://docs.scroll.io/en/technology/) is detailed and insightful - a must read. 
+- An overview of deployed chain related contracts can be found [here](https://docs.scroll.io/en/developers/scroll-contracts/).
+- Their verification contracts were [auditted by OpenZeppelin](https://blog.openzeppelin.com/scroll-zktrieverifier-audit).
 
 ## High level overview
 
+Scroll is EVM compatible. It implements its account and storage tries using their in-house built [zkTrie](https://docs.scroll.io/technology/sequencer/zktrie) => "*a sparse binary Merkle tree with the Poseidon hash, a zk-friendly hash function*". It is [open source](https://github.com/scroll-tech/zktrie).
+
+Transactions are batched and submitted (`Committed`) to the L1 `ScrollChain` rollup contract. Validity proofs are then generated and submitted (`Finalized`) to L1 alongside the new state root against which we can verify storage proofs.
+
+Chunks are the unit of zkEVM proving. Chunks are aggregated into batches and proven. It is the aggregate proof that is submitted to L1.
+
+The undocumented [ScrollChainCommitmentVerifier](https://etherscan.io/address/0xC4362457a91B2E55934bDCb7DaaF6b1aB3dDf203#readContract) has getter functions for the addresses of the Scroll rollup/Poseidon hash contract on L1. Poseiden hashes are used for node keys in the context of the zkTrie due to it being more efficient to prove in the zk circuit.
 
 ### Context
 
-The context for a scroll VM request is the `lastFinalizedBatchIndex`
+The [context](/concepts#context) for a scroll VM request is the `lastFinalizedBatchIndex` returned from the `ScrollChain` rollup contract.
+
+Whilst this value **is available on chain** in the Scroll rollup contract, we fetch it from Scrolls API noting that mapping the batch index to the data contained within is dependent on this centralised [API](https://mainnet-api-re.scroll.io/api/batch?index=307825) at the present time.
 
 ### Commit
+
+The `lastFinalizedBatchIndex` is included in the commit body alongside block data for the last L2 block included in the latest finalized batch on L1.
+
+### Verification
+
+The Unruggable gateway Typescript prover implementation used by the `ScrollRollup.ts` is `EthProver.ts`. 
+
+The Scroll [Geth fork](https://github.com/scroll-tech/go-ethereum/blob/9abdd5b9aafb9ff741b824f7ec2e7f47edee8365/internal/ethapi/api.go#L675) implements the `eth_getProof` method and returns the same key structure for both account (`accountProof`) and storage proofs (`storageProof`). Internally Scroll uses its `zkTrie` implementation to return appropriate proofs and we provide helper functions within the `ScrollTrieHooks` library to appropriately handle verification of the proofs returned.
+
+### Notes
+
+#### Proof Overflow
+
+As outlined [here](https://docs.scroll.io/en/technology/sequencer/execution-node/#circuit-capacity-checker):
+
+> "With Scroll’s current zkEVM circuits, it is possible to construct  transactions and blocks that cannot be proven because they do not fit into the zkEVM circuit. We call this proof overflow."
+
+#### Reliance on centralised APIs
+
+As noted above the Scroll architecture (as is - 19/08/24) still has centralised elements.
