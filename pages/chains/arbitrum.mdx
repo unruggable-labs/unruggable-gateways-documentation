@@ -1,20 +1,52 @@
 # Arbitrum
 
-[Arbitrum](https://arbiscan.io/) is an EVM compatible Optimistic rollup.
+<img src="/images/chains/arbitrum.png" alt="Arbitrum - Optimistic L2 rollup" className="centered-image" />
 
-[Arbitrum contract addresses](https://docs.arbitrum.io/build-decentralized-apps/reference/useful-addresses).
+### Summary
+
+[Arbitrum](https://arbitrum.io) is an EVM compatible Optimistic rollup.
+
+- [Arbiscan](https://arbiscan.io/) is its chain explorer.
+- The deployment addresses for its smart contract are found [here](https://docs.arbitrum.io/build-decentralized-apps/reference/useful-addresses).
+- The gateway and verifier solution developed for the mainnet (Arbitrum One) chain can also be used for other Nitro stack chains (including AnyTrust and [Orbit](https://arbitrum.foundation/orbit) chains).
 
 ## High level overview
+
+The Arbitrum [rollup contract](https://etherscan.io/address/0x5eF0D09d1E6204141B4d37530808eD19f60FBa35) is called by the [`ValidatorWallet`](https://etherscan.io/address/0x5bc5fb83950bbbf156e433c5c098bfe533db4021#code) (e.g. https://etherscan.io/tx/0x0e59bdd3b71efda371dcb61ddeb75420c85766fe87d69b76ce73aa24db659da3#eventlog) to update the latest created and committed nodes.
 
 
 ### Context
 
-The context used is returned from the `latestConfirmed()` method of the Arbitrum rollup contract. The integer returned is the ID of the latest confirmed `RBlock` which represents a batch of transactions or state transitions that are bundled together and committed to the Ethereum blockchain.
+The [context](/concepts#context) used is returned from the `latestConfirmed()` method of the Arbitrum rollup contract. The integer returned is the ID of the latest confirmed `RBlock` which represents a batch of transactions or state transitions that are bundled together and committed to the Ethereum blockchain.
 
 ### Commit
 
-Arbitrum has a fully implemented fault proof system so it is not neccesarily the case that a `RBlock` posted to L1 is verified and finalised. 
+Arbitrum has a fully implemented disection based dispute resolution process refereed by an L1 contract. It is not neccesarily the case that a `RBlock` posted to L1 is verified and finalised, but if the challenge period passes without a dispute being initiated the `RBlock` is considered confirmed.
 
-The commit body contains the RLP encoded block data as well as the `sendRoot` (The Merkle root of the outbox tree state) for the RBlock in context.
+The commit body contains the RLP encoded block data as well as the `sendRoot` (The Merkle root of the outbox tree state) for the latest confirmed `RBlock` (the context).
 
-This process is outlined in the Arbitrum documentation: [How can I verify that an L2 block has been processed as part of a specific RBlock?](https://docs.arbitrum.io/for-devs/troubleshooting-building#how-can-i-verify-that-an-l2-block-has-been-processed-as-part-of-a-specific-rblock)
+This process of fetching the `sendRoot` is outlined in the Arbitrum documentation: [How can I verify that an L2 block has been processed as part of a specific RBlock?](https://docs.arbitrum.io/for-devs/troubleshooting-building#how-can-i-verify-that-an-l2-block-has-been-processed-as-part-of-a-specific-rblock).
+
+We filter the `NodeCreated` event for the latest confirmed `RBlock`
+
+```
+event NodeCreated(
+    uint64 indexed nodeNum,
+    bytes32 indexed parentNodeHash,
+    bytes32 indexed nodeHash,
+    bytes32 executionHash,
+    Assertion assertion,
+    bytes32 afterInboxBatchAcc,
+    bytes32 wasmModuleRoot,
+    uint256 inboxMaxCount
+);
+```
+
+The latest L2 `blockHash` and `sendRoot` is contained (heavily nested) in the `RBlock` (`event.args.assertion.afterState.globalState.bytes32Vals`) in the `GlobalState` [struct](https://github.com/OffchainLabs/nitro-contracts/blob/fbbcef09c95f69decabaced3da683f987902f3e2/src/state/GlobalState.sol#L7) nested in the `Assertion` [struct](https://github.com/OffchainLabs/nitro-contracts/blob/fbbcef09c95f69decabaced3da683f987902f3e2/src/rollup/Node.sol#L15) emitted with the event.
+
+
+### Verification
+
+The Unruggable gateway Typescript prover implementation used for Arbitrum Nitro stack chains is `EthProver.ts`. 
+
+The on-chain verification of Nitro proofs is handled by the `NitroVerifier.sol` which fetches the node data from the rollup contract (`getNode`) and verifies that it matches the data returned with the commit.

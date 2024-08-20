@@ -1,15 +1,16 @@
 # Taiko
 
-[Taiko](https://taikoscan.io/) is a zero knowledge (zk) based rollup with full EVM compatability.
+<img src="/images/chains/taiko.png" alt="Taiko zk-EVM based L2" className="centered-image" />
 
+[Taiko](https://taiko.xyz/) is a zero knowledge (zk) based rollup with full EVM compatability.
+
+- The Taiko L1 rollup contract can be found at [`based.taiko.eth`](https://etherscan.io/address/based.taiko.eth).
+- The chain explorer for Taiko is [TaikoScan](https://taikoscan.io/).
 
 ## High level overview
 
-The Taiko L1 rollup contract can be found at [`based.taiko.eth`](https://etherscan.io/address/based.taiko.eth).
-
 Taiko is EVM compatible and implements its account and storage tries using your standard Patricia Merkle Trie. We verify the returned proofs using the `SecureMerkleTrie.sol` library. 
 
-The Typescript Prover implementation used by Taiko is `EthProver.ts`. 
 
 ### Context
 
@@ -18,3 +19,11 @@ The context used by Taiko is that last synchronised block ID (synonymous with bl
 ### Commit
 
 The Taiko commit data contains the `parentHash` returned from a call to `eth_getBlockByNumber`. This is used in the verifier to get the `TransitionState` from the rollup by calling `getTransition`. Proofs are then verified for inclusion against the associated state root.
+
+### Verification
+
+The Unruggable gateway Typescript prover implementation used for Taiko is `EthProver.ts`. 
+
+### Notes
+
+

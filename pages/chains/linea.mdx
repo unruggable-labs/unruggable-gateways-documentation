@@ -1,21 +1,47 @@
 # Linea
 
-Linea is an EVM compatible zero knowledge (zk) rollup chain built by Consensys.
+<img src="/images/chains/linea.png" alt="Linea zk rollup L2" className="centered-image" />
+
+[Linea](https://linea.build/) is an EVM compatible zero knowledge (zk) rollup chain built by [Consensys](https://consensys.io/).
+
+- [LineaScan](https://lineascan.build/) is the chain explorer for the chain.
+- Linea smart contract addresses can be found [here](https://docs.linea.build/developers/quickstart/info-contracts).
 
 ## High level overview
 
+The `LineaRollup` rollup smart contract implementation is deployed behind a proxy on Layer 1.
+
 Linea uses a Spare Merkle Trie (SPT) data structure.
 
-The Typescript Prover implementation used by OP stack chains is `LineaProver.ts`. 
+The [Linea: Operator](https://etherscan.io/address/0x9228624c3185fcbcf24c1c9db76d8bef5f5dad64) address calls `finalizeBlocksWithProof` passing in the generated aggregate ZK Proof to update the latest finalized L2 block number and associated state root. An example transaction can be seen [here](https://etherscan.io/tx/0xc75a12f2011bae3c1cf0703b43fa48a6936022e782d8f9c0cf88465abe2251c3#eventlog).
+
+<img src = "/images/docs/linea-data-finalized-event-log.png" style = {{marginTop: "40px"}} />
+
 
 ### Context
 
-The Linea verifier specifies the finalised L1 block number as the context for virtual machine requests.
+The `LineaRollup.ts`specifies the finalised L2 block number as the context for virtual machine requests (returned by calling `currentL2BlockNumber` on the Linea rollup contract).
 
 ### Commit
 
-The Linea `L1MessageService` [contract](https://etherscan.io/address/0xd19d4b5d358258f05d7b411e21a1460d11b0876f) has `stateRootHashes` method that maps a `blockNumber` to a state root. The state root makes up the body of the commit for Linea.
+The Linea `L1MessageService` [contract](https://etherscan.io/address/0xd19d4b5d358258f05d7b411e21a1460d11b0876f) has `stateRootHashes` method that maps a L2 `blockNumber` to a state root. The state root makes up the body of the commit for Linea.
 
-### Prover
+### Verification
 
-Linea uses the `LineaProver`. Linea implements the `linea_getProof` RPC method that returns proof data 
+The Unruggable gateway Typescript prover implementation used for Linea is `LineaProver.ts`. Linea implements the `linea_getProof` RPC method that returns proof data that can be verified with the [SparseMerkleProof.sol](https://github.com/Consensys/linea-monorepo/blob/main/contracts/contracts/lib/SparseMerkleProof.sol)([tests](https://github.com/Consensys/linea-monorepo/blob/main/contracts/test/SparseMerkleProof.ts)) written by Consensys.
+
+We interface with our port of this library through our `LineaVerifier.sol` that is deployed on L1.
+
+
+
+### Notes
+
+#### Compiler version
+
+As outlined [here](https://docs.linea.build/developers/quickstart/ethereum-differences):
+
+> "Solidity 8.23 and later compiles newer versions of the EVM by default. Use the solc --evm-version london command to ensure compatibility with Linea."
+
+#### `Linea.eth` subnames
+
+Linea released [their own code](https://github.com/Consensys/linea-ens/) for resolving subnames of `linea.eth` from Linea using Proof of Humanity as a way of allocating names. This effort was [auditted by Consensys](https://consensys.io/diligence/audits/2024/06/linea-ens/) and makes for an interesting read.
