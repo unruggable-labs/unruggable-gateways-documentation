@@ -12,16 +12,15 @@
 
 ## High level overview
 
-The Arbitrum [rollup contract](https://etherscan.io/address/0x5eF0D09d1E6204141B4d37530808eD19f60FBa35) is called by the [`ValidatorWallet`](https://etherscan.io/address/0x5bc5fb83950bbbf156e433c5c098bfe533db4021#code) (e.g. https://etherscan.io/tx/0x0e59bdd3b71efda371dcb61ddeb75420c85766fe87d69b76ce73aa24db659da3#eventlog) to update the latest created and committed nodes.
+The Arbitrum [rollup contract](https://etherscan.io/address/0x5eF0D09d1E6204141B4d37530808eD19f60FBa35) is called by the [`ValidatorWallet`](https://etherscan.io/address/0x5bc5fb83950bbbf156e433c5c098bfe533db4021#code) (e.g. [this transaction](https://etherscan.io/tx/0x0e59bdd3b71efda371dcb61ddeb75420c85766fe87d69b76ce73aa24db659da3#eventlog)) to update the latest created and committed nodes.
 
+Arbitrum has a fully implemented disection based dispute resolution process refereed by an L1 contract. It is not neccesarily the case that a `RBlock` posted to L1 is verified and finalised, but if the challenge period passes without a dispute being initiated the `RBlock` is considered confirmed.
 
 ### Context
 
-The [context](/concepts#context) used is returned from the `latestConfirmed()` method of the Arbitrum rollup contract. The integer returned is the ID of the latest confirmed `RBlock` which represents a batch of transactions or state transitions that are bundled together and committed to the Ethereum blockchain.
+The [context](/architecture#context) used is returned from the `latestConfirmed()` method of the Arbitrum rollup contract. The integer returned is the ID of the latest confirmed `RBlock` which represents a batch of transactions or state transitions that are bundled together and committed to the Ethereum blockchain.
 
 ### Commit
-
-Arbitrum has a fully implemented disection based dispute resolution process refereed by an L1 contract. It is not neccesarily the case that a `RBlock` posted to L1 is verified and finalised, but if the challenge period passes without a dispute being initiated the `RBlock` is considered confirmed.
 
 The commit body contains the RLP encoded block data as well as the `sendRoot` (The Merkle root of the outbox tree state) for the latest confirmed `RBlock` (the context).
 
@@ -50,3 +49,5 @@ The latest L2 `blockHash` and `sendRoot` is contained (heavily nested) in the `R
 The Unruggable gateway Typescript prover implementation used for Arbitrum Nitro stack chains is `EthProver.ts`. 
 
 The on-chain verification of Nitro proofs is handled by the `NitroVerifier.sol` which fetches the node data from the rollup contract (`getNode`) and verifies that it matches the data returned with the commit.
+
+Arbitrum utilises the same Patricia Merkle Trie structure as Layer 1 Ethereum for its storage and account tries. As such proof verification utilises `SecureMerkleTrie.sol` by proxy of our `EthTrieHooks.sol` library.

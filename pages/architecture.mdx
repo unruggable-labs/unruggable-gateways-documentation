@@ -1,11 +1,11 @@
-# Concepts
+# Architecture
 
 The codebase has been built in an intentionally abstracted manner to allow for flexibility in integrating with new chains.
 
 At a high level:
 
 - A contract defines an `EVMRequest` which when built is passed to the `fetch` method defined in `EVMFetchTarget.sol`. 
-- Internally this method implements the ERC-3668 specification and reverts with an `OffchainLookup` telling the client to query our `Gateway`. 
+- Internally this method implements the [ERC-3668 specification](https://eips.ethereum.org/EIPS/eip-3668) and reverts with an `OffchainLookup` telling the client to query our `Gateway`. 
 - The response is handled in the 3668 callback `fetchCallback` which passes the response to a chain specific `Verifier` (specified when calling `fetch`) to validate the returned proofs and return the appropriate values to the caller.  
 
 A more in depth overview of these core architectural components is found below:
@@ -13,12 +13,11 @@ A more in depth overview of these core architectural components is found below:
 ## Request Builder
 
 `EVMFetcher.sol` defines the public facing API for building an `EVMRequest`.
-An `EVMRequest` is made up of a series of operations (`ops`) that are interpreted by the virtual machine to read and manipulate data stored on other blockchains. 
+An `EVMRequest` is made up of a series of operations (`ops`) that are interpreted by the [virtual machine](/virtual-machine) to read and manipulate data stored on other blockchains. 
 
 A Solidity developer can write a smart contract that builds a request by having their contract inherit from `EVMFetchTarget.sol`. 
 
-We also offer a Typescript implemetation of the request builder and virtual machine to allow for easy development and testing of requests. Take a look at our [Examples](/examples) page for some.. examples.
-
+We also offer a [Typescript](https://www.typescriptlang.org/) implementation of the request builder and virtual machine to allow for easy development and testing of requests. Take a look at our [Examples](/examples) page for some.. examples.
 
 - Further details of the methods made available through the Solidity/TS APIs can be found at the [OP Code Reference](/op-code-reference).
 - Further information about the implemetation of the Virtual Machine can be found [here](/virtual-machine).
@@ -27,6 +26,7 @@ We also offer a Typescript implemetation of the request builder and virtual mach
 
 The `gateway.ts` Typescript file is utilised to provision a simple HTTP gateway server for responding to requests for data from other chains. The constructor takes a `Rollup` as a parameter (see below).
 
+The gateway interfaces with the appropriate blockchain to source data, generate proofs and return them to the interfacing client. This removes the need for users or clients to have to directly interface the chains in question.
 
 ## The Rollup
 
@@ -59,5 +59,5 @@ The Verifier implements the `gatewayURLs()` method that specifies the URL(s) of 
 
 ### Context
 
-Each verifier implements the `getLatestContext` method of the `IEVMVerifier` interface. This method is called and the returned context is passed as part of the `extraData` argument of the `OffchainLookup` revert body. This context is the medium through which a request can specify **its visibility on L2 chain state**. The gateway responds giving consideration to this, and passes the context back as part of its response body.
+Each verifier implements the `getLatestContext` method of the `IEVMVerifier` interface. This method is called and the returned context is passed as part of the `extraData` argument of the `OffchainLookup` revert body. This context is the medium through which a request can specify **its visibility of L2 chain state**. The gateway responds giving consideration to this, and passes the context back as part of its response body.
 

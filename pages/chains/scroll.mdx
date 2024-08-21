@@ -24,7 +24,7 @@ The undocumented [ScrollChainCommitmentVerifier](https://etherscan.io/address/0x
 
 ### Context
 
-The [context](/concepts#context) for a scroll VM request is the `lastFinalizedBatchIndex` returned from the `ScrollChain` rollup contract.
+The [context](/architecture#context) for a scroll VM request is the `lastFinalizedBatchIndex` returned from the `ScrollChain` rollup contract.
 
 Whilst this value **is available on chain** in the Scroll rollup contract, we fetch it from Scrolls API noting that mapping the batch index to the data contained within is dependent on this centralised [API](https://mainnet-api-re.scroll.io/api/batch?index=307825) at the present time.
 

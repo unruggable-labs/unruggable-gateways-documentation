@@ -2,20 +2,7 @@
 
 The EVM Gateway is an [open source codebase](https://github.com/unruggable-labs/evmgateway-v2/tree/main/v2) offering an end to end solution for resolving data from EVM compatible blockchains whilst inheriting the security guarantees of Layer 1 Ethereum mainnet.
 
-The core elements of the solution are:
-   ### A typescript HTTP gateway service.
-   
-   The gateway interfaces with the appropriate blockchain to source data, generate proofs and return them to the interfacing client.
-
-   This removes the need for users or clients to have to directly interface with a potentially inifinite number of chains.
-
-   ### A series of verifier contracts for verifying L2 state on L1.
-   
-   A number of verifier contracts are provided out of the box. We currently support Arbitrum, Optimism, and Scroll.
-   
-   These verifiers interface with the rollup contracts of the specific chains on L1 to verify merkle inclusion proofs against known state roots.
-
-   They give consideration to the security and fraud proofing mechanisms of the respective blockchains.
+The core elements of the solution are outlined in our [Architecture](/architecture) section.
 
 
 ## Motivations
@@ -26,3 +13,5 @@ The solution offers (amongst other things):
 - Multi target support
 - In request data manipulation (keccak256, slicing etc)
 - Nested request evaluation (for complex data architectures e.g. the proposed ENS v2 specification)
+
+If you have a use case that is not supported, please [get in touch](https://unruggable.com/contact) and/or consider [contributing](/contributing).

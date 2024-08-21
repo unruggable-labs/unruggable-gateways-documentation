@@ -1,7 +1,7 @@
 {
   "index": "Introduction",
   "getting-started": "Getting Started",
-  "concepts": "Concepts",
+  "architecture": "Architecture",
   "virtual-machine": "Virtual Machine",
   "op-code-reference": "OP Code Reference",
   "verifier-deployments": "Verifier deployments",

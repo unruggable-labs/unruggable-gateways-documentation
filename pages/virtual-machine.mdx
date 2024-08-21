@@ -2,24 +2,24 @@ import Link from 'next/link'
 
 ## Virtual Machine
 
+Our stack based virtual machine is designed for the purpose of reading data from EVM compatabile blockchains and generating proofs to verify the integrity of that data.
+
 ### Commands
 
-A virtual machine command maintains two registers:
+Internally a virtual machine program maintains two registers:
 
 - An operations register (`ops`)
 - An inputs register (`inputs`)
 
-The <Link href="/op-code-reference">OP codes</Link> exposed by the public API define operations that the virtual machine interprets.
+The [OP codes](/op-code-reference) exposed by the public API define operations that the virtual machine interprets.
 
-Operations can operate on/using inputs in the inputs register.
-
-In the context of reading data from EVM compatabile blockchains the majority of the OP codes partake in the generation (and manipulation) of storage slot IDs and the extraction/post processing of the data contained within.
+Operations can operate on/using inputs in the inputs register as well as manipulating items on the stack and previously fetched outputs. The majority of the OP codes are responsible for the generation (and manipulation) of storage slot IDs and the extraction/post processing of the data contained within.
 
 ### Requests
 
-A virtual machine request is a command with the explicit specification of the number of expected outputs.
+A virtual machine request (`EVMRequest`) is a program with the explicit specification of the number of expected outputs.
 
-Requests can nest additional commands for more complicated use cases.
+Requests can nest additional programs for more complicated use cases.
 
 ### Internal state
 
@@ -33,4 +33,4 @@ The virtual machine maintains an internal state that constitutes:
 - `needs` - an array keeps track of required storage/account proofs.
 - `outputs` - an array holds lazily resolved outputs.
 
-In the Typescript implementation this state is represented by the `MachineState` class.
+In the Typescript implementation this state is represented by the `MachineState` class of `vm.ts`, whilst the Solidity implementation defines the `Machine` struct contained within `EVMProver.sol`

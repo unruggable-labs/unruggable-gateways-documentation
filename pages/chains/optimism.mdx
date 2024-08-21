@@ -2,34 +2,35 @@
 
 <img src="/images/chains/optimism.png" alt="Optimism L2" className="centered-image" />
 
-We offer support for two types of rollup based on the [Optimism](https://www.optimism.io/) stack, namely rollups that **do** implement the OP Stack [fault proof system](https://docs.optimism.io/stack/protocol/fault-proofs/explainer) (e.g. Optimism Mainnet) and those that **do not** (e.g. [Base](https://www.base.org/)).
+## Summary
+
+We offer support for two types of rollup based on the [Optimism](https://www.optimism.io/) stack, namely rollups that **do** implement the OP Stack [fault proof system](https://docs.optimism.io/stack/protocol/fault-proofs/explainer) (e.g. Optimism Mainnet) and those that **do not** (e.g. [Base](https://www.base.org/)). For details on the latter please see our documentation for [Base](/chains/base).
+
+- The OP Mainnet chain explorer is found [here](https://optimistic.etherscan.io/).
 
 ## High level overview
 
-Both types of chain utilise the same trie structures. Optimism is EVM compatible and implements its account and storage tries using your standard Patricia Merkle Trie. We verify the returned proofs using the `SecureMerkleTrie.sol` library. What differs is the contracts through which the latest valid L2 state root is discerned on Layer 1 Ethereum.
+Optimism is EVM compatible and implements its account and storage tries using your standard [Patricia Merkle Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/). We verify the returned proofs using Optimism's `SecureMerkleTrie.sol` library.
 
-The Typescript Prover implementation used by OP stack chains is `EthProver.ts`. 
+The `OptimismPortalProxy` implements a getter for the `DisputeGameFactory` through which new `FaultDisputeGame` instances are created. The creation of a `FaultDisputeGame` is the mechanism through which a proposal for the current state root of the chain is made. 
 
+Anyone* can make a state root proposal and the back and forth process through which games are disputed is what prevents an invalid (for [example](https://etherscan.io/tx/0xafbda91446e4cbf3ca4dc0f8c64920be90625c7d0eedc5f4d65b05acaa5a2d58#eventlog)) L2 state being finalized on L1`.
 
 ### Context
 
-For chains that **do not** implement fault proofs the  context of the request is the `latestOutputIndex` queried from the `L2OutputOracle` contract.
+The context of the request is the game index associated with the latest appropriately resolved `FaultDisputeGame`.
 
-For chains that **do** implement fault proofs the context of the request is the game index associated with the latest appropriately resolved `FaultDisputeGame`.
+The appropiate index is discerned by querying the latest `rootClaim` from the `AnchorRegistry` and efficiently finding the game that submitted the claim.
 
 ### Commit 
 
-The commit data for chains that **do not** implement fault proofs is discerned by calling `getL2Output` on the `L2OutputOracle`. State roots can only be proposed to the `L2OutputOracle` by an access controlled `proposer`.
+The body of an OP stack chain commit includes L2 block data (`blockHash`, `stateRoot`) as well as the hash of the storage trie (`storageRoot`) for the `L2ToL1MessagePasser` contract. 
 
-For chains that **do** implement fault proofs fetching commit data is somewhat more complex.
+### Verification
 
-`OptimismPortalProxy` directs to the `DisputeGameFactory` through which new `FaultDisputeGame` instances are created. The creation of a `FaultDisputeGame` is the mechanism through which a proposal for the current state root of the chain is made. 
+The Unruggable gateway Typescript prover implementation used for OP Stack based chains is `EthProver.ts`. 
 
-Anyone can make a state root proposal and the back and forth process through which games are disputed is what prevents an invalid (for [example](https://etherscan.io/tx/0xafbda91446e4cbf3ca4dc0f8c64920be90625c7d0eedc5f4d65b05acaa5a2d58#eventlog)) L2 state being finalized on L1`.
-
-A game index is used as the commit identifier for these kinds of chain. The appropiate index is discerned by querying the latest `rootClaim` from the `AnchorRegistry` and efficiently finding the game that submitted the claim.
-
-### Response
+OP Stack chains use the standard Patricia Merkle Trie. Proof data is verified using the `OPVerifier.sol` and `OPFaultVerifier.sol` contracts deployed on Layer 1.
 
 The `OutputRootProof` is [defined by Optimism](https://github.com/ethereum-optimism/optimism/blob/5a5dd8f44161e8e05093d92b32e102eb38fe78b6/packages/contracts-bedrock/src/libraries/Types.sol#L25-L30) as:
 
@@ -43,3 +44,14 @@ The `OutputRootProof` is [defined by Optimism](https://github.com/ethereum-optim
 ```
 
 The gateway returns this data alongside individual account/storage proofs for the requested data. We discern that the `OutputRootProof` for the game index that the gateway claims it is returning matches data stored on L1 and then we verify the proofs returned against the associated state root.
+
+### Notes
+
+#### Safeguard consideration
+
+It is not the L1 chain that dictates the state of an OP Stack based chain. Rather, it provides the inputs (transactions/ordering) from which the state of the L2 chain can be derived (in for example the `op-node`/`op-geth` clients).
+
+We read state data from the `AnchorStateRegistry` which critically assumes that all dispute games resolve correctly. It does not take into consideration any of the [safeguards](https://docs.optimism.io/stack/protocol/fault-proofs/fp-security#safeguards-within-optimismportal) currently (21/08/24) in place to protect the integrity of the chain, noting that the fault proof system is new, novel, and complex.
+
+
+
