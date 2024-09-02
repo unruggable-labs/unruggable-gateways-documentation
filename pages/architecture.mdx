@@ -1,63 +1,47 @@
 # Architecture
 
-The codebase has been built in an intentionally abstracted manner to allow for flexibility in integrating with new chains.
+The [v2 EVM Gateway codebase](https://github.com/unruggable-labs/evmgateway-v2/tree/main/v2) includes both a [Typescript](https://github.com/unruggable-labs/evmgateway-v2/blob/main/v2/src/vm.ts) and a [Solidity](https://github.com/unruggable-labs/evmgateway-v2/blob/main/v2/contracts/EVMProver.sol) version of the virtual machine. The idea is simple: write your code in Typescript to read data from your chosen Layer 2 (L2) network, then easily convert it to Solidity and deploy it without changes.
 
-At a high level:
+## How It Works (High-Level Overview)
 
-- A contract defines an `EVMRequest` which when built is passed to the `fetch` method defined in `EVMFetchTarget.sol`. 
-- Internally this method implements the [ERC-3668 specification](https://eips.ethereum.org/EIPS/eip-3668) and reverts with an `OffchainLookup` telling the client to query our `Gateway`. 
-- The response is handled in the 3668 callback `fetchCallback` which passes the response to a chain specific `Verifier` (specified when calling `fetch`) to validate the returned proofs and return the appropriate values to the caller.  
+1.	**Contract Definition**: A contract defines an `EVMRequest`. This request is passed to the fetch method defined in `EVMFetchTarget.sol`.
+2.	**Offchain Data Handling**: The fetch method uses the [ERC-3668](https://eips.ethereum.org/EIPS/eip-3668) standard and reverts with an `OffchainLookup`, instructing the client to query the Gateway.
+3.	**Response Processing**: The `fetchCallback` method processes the response, using a chain-specific "Verifier" to validate proofs and return the results to the caller.
 
-A more in depth overview of these core architectural components is found below:
+## Core Components
 
-## Request Builder
+### 1. Request Builder
 
-`EVMFetcher.sol` defines the public facing API for building an `EVMRequest`.
-An `EVMRequest` is made up of a series of operations (`ops`) that are interpreted by the [virtual machine](/virtual-machine) to read and manipulate data stored on other blockchains. 
+- `EVMFetcher.sol` provides a [public API](/op-code-reference) for creating an `EVMRequest`. This request consists of a series of operations that the virtual machine interprets to read and process data from other blockchains.
+- Solidity developers can write contracts that build these requests by inheriting from `EVMFetchTarget.sol`.
+- A Typescript version is also available for easier development and testing. You can check out our [Examples](/examples) page for more details.
 
-A Solidity developer can write a smart contract that builds a request by having their contract inherit from `EVMFetchTarget.sol`. 
+### 2. The Gateway
 
-We also offer a [Typescript](https://www.typescriptlang.org/) implementation of the request builder and virtual machine to allow for easy development and testing of requests. Take a look at our [Examples](/examples) page for some.. examples.
+- The `gateway.ts` Typescript file sets up a simple HTTP server to handle requests for data from other blockchains. It uses a “Rollup” as a parameter (explained below).
+- The gateway connects to the necessary blockchain to gather data, create proofs, and send them back to the client, so users don’t have to interact directly with the blockchains.
 
-- Further details of the methods made available through the Solidity/TS APIs can be found at the [OP Code Reference](/op-code-reference).
-- Further information about the implemetation of the Virtual Machine can be found [here](/virtual-machine).
+### 3. The Rollup
 
-## The Gateway
-
-The `gateway.ts` Typescript file is utilised to provision a simple HTTP gateway server for responding to requests for data from other chains. The constructor takes a `Rollup` as a parameter (see below).
-
-The gateway interfaces with the appropriate blockchain to source data, generate proofs and return them to the interfacing client. This removes the need for users or clients to have to directly interface the chains in question.
-
-## The Rollup
-
-The chain specific rollup Typescript classes utilise `Prover` and `Commit` generics to provide information to the `Gateway` about how to request data from the chain and generate verifiable proofs.
-
-They implement methods (`encodeWitness`/`encodeWitnessV1`) that define how commit and proof data is encoded for return from the gateway to the client such that it can be appropriately interpreted and verified in the verifier deployed on L1.
-
-### Commits
-
-Commits are an abstract representation of the data submitted to L1 by the relevant L2 chain. Commit data is neccesary for verifying a proof or deriving the appropriate data against which to verify a proof.
-
-The `rollup.ts` base class defines the following `abstract` commit related methods:
-
- - `fetchLatestCommitIndex` - tells the gateway how to fetch the latest chain specific commit index is
- - `fetchParentCommitIndex` - tells the gateway how to discern the parent index of a commit
- - `fetchCommit` - tells the gateway how to fetch the required commit data
-
-The commit data is encoded in the response from the `Gateway` alongside the proofs.
-
-## Verifiers
-
-The Verifier is a Solidity contract deployed to L1 that is called by the [ERC 3668](https://eips.ethereum.org/EIPS/eip-3668) (CCIP Read: Secure offchain data retrieval) callback when a response is received from the gateway server. The verifier returns proven values to the client having verified the proofs contained within the gateway response. 
-
-Different verifiers implement different Trie structures and as such this verification varies on a chain by chain basis subject to case by case validation and derivation steps. Examples of these differences can be seen in the `EthTrieHooks.sol`, and `LineaTrieHooks.sol` libraries.
+- Rollup classes in Typescript use “Prover” and “Commit” generics to instruct the Gateway on how to request data and create verifiable proofs.
+- They have methods (`encodeWitness` and `encodeWitnessV1`) that explain how to encode proof data from the gateway in a way that is understood by the "Verifier".
 
 
-### Gateway URL
+#### Commits
 
-The Verifier implements the `gatewayURLs()` method that specifies the URL(s) of the `Gateway` which the client should query to service the request.
+- Commits represent the data submitted to Layer 1 (L1) by the L2 chain. They are necessary to verify a proof or extract the right data to check against a proof.
+- The `rollup.ts` base class defines methods to help the gateway fetch commit data (`fetchLatestCommitIndex` and `fetchCommit`).
 
-### Context
 
-Each verifier implements the `getLatestContext` method of the `IEVMVerifier` interface. This method is called and the returned context is passed as part of the `extraData` argument of the `OffchainLookup` revert body. This context is the medium through which a request can specify **its visibility of L2 chain state**. The gateway responds giving consideration to this, and passes the context back as part of its response body.
+### 4. Verifiers
 
+- A Verifier is a Solidity contract deployed on L1. It is used by the ERC 3668 callback to verify the data sent from the gateway server.
+- Different chains utilize different hashing functions and Trie structures. Verifiers use different verification steps based on the blockchain. Helper contracts are used include `EthTrieHooks.sol` and `LineaTrieHooks.sol`.
+
+#### Gateway URL
+
+- The Verifier specifies the URLs of the Gateways to query for handling a request via the `gatewayURLs()` method.
+
+#### Context
+
+- Each Verifier implements the `getLatestContext` method from the `IEVMVerifier` interface. This method determines what L2 chain state the request can access. The gateway considers this context when responding and includes it in its response.

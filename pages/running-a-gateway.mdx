@@ -1,34 +1,43 @@
-## Running a gateway
+# Running a gateway
 
-If you would like to run your own gateway you are more than welcome to do so.
+If you would like to run your own gateway, you are more than welcome to do so.
 
-To run a gateway: 
+To run a gateway:
 
-### Checkout
+## Checkout
 
 - Checkout the [repository](https://github.com/unruggable-labs/evmgateway-v2/tree/main/v2).
 
-`git clone https://github.com/unruggable-labs/evmgateway-v2.git`
+```bash 
+git clone https://github.com/unruggable-labs/evmgateway-v2.git
+```
 
-### Setup
+## Setup
 
 - Run the following setup commands
-    - `foundryup`
-    - `forge install`
-    - `bun i`
+```bash
+foundryup
+forge install
+bun i
+```
 
-### Configuration
+## Configuration
 
 - Copy the `.env.example` template to `.env` and define the appropriate environment variables.
-    - `INFURA_KEY`
-    - `ALCHEMY_KEY`
+```bash
+ALCHEMY_KEY
+INFURA_KEY
+ANKR_KEY
+```
 
-### Run it
+## Run it
 
 - Run the gateway using the following commands:
 
-`bun run serve <chain> [port]`
+```bash 
+bun run serve <chain> [port]
+````
 
-**Supported chains:** `base` `op` `arb1` `scroll` `taiko` `utaiko`
+**Supported chains:** `arb1` `base` `blast` `fraxtal` `linea` `op` `polygon` `scroll` `taiko` `zksync` `zora`
 
 **Default port:** `8000`

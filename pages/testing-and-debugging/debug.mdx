@@ -1,0 +1,17 @@
+# Debug
+
+While not strictly tests, the `debug` folder contains several useful scripts that provide clarity on the solution's internals and help with working on the solution.
+
+## Running Debug Scripts
+
+Run these scripts using:
+
+```bash
+bun run test/debug/FILE_NAME.ts
+```
+
+- `decompile.ts` - Initial PoC for a decompiler for VM commands.
+- `deploy.ts` - Example verifier deployment to a locally run `anvil` node.
+- `play.ts`
+- `speed.ts` - Speed test for the `getStorage` and `getProof` methods of the  `EthProver`.
+- `zkevm.ts` - Demonstrates Polygon zkEVM lack of `eth_getProof` support.

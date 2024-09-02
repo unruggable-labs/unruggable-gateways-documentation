@@ -1,0 +1,24 @@
+# Components
+
+The `components` folder holds tests for individual components of the gateway solution.
+
+- `MerkleTrie.test.ts` tests proving of accounts and storage data.
+- `cached.test.ts` tests the caching functionality defined within `cached.ts`.
+- `limits.test.ts` tests the limits of the virtual machine and ensures that scenarios at these edges are handled correctly, e.g., max stack size, number of unique proofs, slot requests, etc.
+- `ops.test.ts` tests the operations exposed by the virtual machine in `vm.ts`.
+- `proofs.test.ts` tests that the deduplication and batching of proof RPC calls are handled correctly to minimize latencies.
+- `requestV1.test.ts` tests that requests written for the original version of the EVMGateway are correctly converted by our `v2()` helper method and return appropriate matching responses.
+
+## Running Tests
+
+Individual tests can be run using the following command:
+
+```bash
+bun test  test/components/FILE_NAME.test.ts
+```
+
+To run all component tests use:
+
+```bash
+bun run test-components
+```

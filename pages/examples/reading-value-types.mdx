@@ -1,7 +1,10 @@
+# Reading value types
 
 As outlined in the [solidity storage layout documentation](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html), *"Except for dynamically-sized arrays and mappings (see below), data is stored contiguously item after item starting with the first state variable, which is stored in slot 0."*
 
-As such a contract defining a `uint256` as such:
+As such, a contract defining a `uint256` as follows:
+
+## Contract definition
 
 ```solidity filename="Example.sol"
 contract X {
@@ -9,7 +12,7 @@ contract X {
 }
 ```
 
-can have its value read as follows:
+## Reading values
 
 ```js filename="example.js"
     new EVMRequest(OUTPUT_COUNT)        //Specify the number of outputs

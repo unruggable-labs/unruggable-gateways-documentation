@@ -1,10 +1,12 @@
 # `eth_getProof`
 
+`eth_getProof` is a JSON-RPC method standardised by [EIP1186](https://eips.ethereum.org/EIPS/eip-1186) and implemented by [L1 execution clients](https://ethereum.org/en/developers/docs/nodes-and-clients/#execution-clients).
+
 The proof returned by `eth_getProof` RPC call consists of several components:
 
 1. **`accountProof`**: 
    - An array of rlp-serialized MerkleTree-Nodes
-   - Proves the inclusion of the queried account in the state trie
+   - Proves the [inclusion](/fundamentals/what-is-an-inclusion-proof) of the queried account in the state trie
 
 2. **`balance`**: 
    - The balance of the account at the specified block
@@ -27,3 +29,8 @@ The proof returned by `eth_getProof` RPC call consists of several components:
      - `proof`: An array of rlp-serialized MerkleTree-Nodes proving the inclusion of the storage value
 
 This proof allows verification of account and storage data without needing the entire state trie. It's particularly useful for light clients and cross-chain interactions.
+
+## Other chains
+
+Other [chains](/chains) implement `eth_getProof` in a manner that differs from EIP 1186. For example Blast returns additional additional keys subject to its own proofing mechanisms.
+Chains such as [Linea](/chains/linea) and [zkSync](/chains/zkSync) implement their own chain specific endpoints, `linea_getProof` and `zks_getProof`.

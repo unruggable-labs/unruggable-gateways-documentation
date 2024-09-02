@@ -1,36 +1,35 @@
-import Link from 'next/link'
+# Virtual Machine
 
-## Virtual Machine
+Our stack-based virtual machine is designed to read data from EVM-compatible blockchains and generate proofs to verify that the data is correct.
 
-Our stack based virtual machine is designed for the purpose of reading data from EVM compatabile blockchains and generating proofs to verify the integrity of that data.
+## Commands
 
-### Commands
+Inside the virtual machine, there are two main registers:
 
-Internally a virtual machine program maintains two registers:
+- **Operations register (`ops`)**: Stores the operations.
+- **Inputs register (`inputs`)**: Stores the inputs.
 
-- An operations register (`ops`)
-- An inputs register (`inputs`)
+The [OP codes](/op-code-reference) provided by the public API define the operations the virtual machine can perform.
 
-The [OP codes](/op-code-reference) exposed by the public API define operations that the virtual machine interprets.
+Operations can use inputs from the `inputs` register, work with items on the stack, or handle previously fetched outputs. Most OP codes are used to generate and manipulate storage slot IDs and to process the data within them.
 
-Operations can operate on/using inputs in the inputs register as well as manipulating items on the stack and previously fetched outputs. The majority of the OP codes are responsible for the generation (and manipulation) of storage slot IDs and the extraction/post processing of the data contained within.
+## Requests
 
-### Requests
+A virtual machine request (`EVMRequest`) specifies how many outputs it expects, and how those outputs should be fetched.
 
-A virtual machine request (`EVMRequest`) is a program with the explicit specification of the number of expected outputs.
+Requests can include additional programs inside them for more complex scenarios.
 
-Requests can nest additional programs for more complicated use cases.
+Evaluation of a request returns:
 
-### Internal state
+- **`exitCode`**: A code that shows the exit status, which is handled based on user-defined settings.
+- **`outputs`**: An array of the requested outputs.
 
-The virtual machine maintains an internal state that constitutes:
+## Internal State
 
-- `target` - the current target contract for which we are fetching data.
-- `slot` - the storage slot ID for which we are fetching data.
-- `stack` - The virtual machine stack.  It provides a structured way to handle execution states and data, facilitating efficient and organized program execution within the VM.
-- `exitCode` - an exit code that is handled dependant on user specified flags.
+The virtual machine keeps track of several pieces of internal state:
 
-- `needs` - an array keeps track of required storage/account proofs.
-- `outputs` - an array holds lazily resolved outputs.
+- **`target`**: The contract we are currently fetching data from.
+- **`slot`**: The storage slot ID where we are fetching data.
+- **`stack`**: The VM stack, which helps manage execution states and data in an organized way.
 
-In the Typescript implementation this state is represented by the `MachineState` class of `vm.ts`, whilst the Solidity implementation defines the `Machine` struct contained within `EVMProver.sol`
+In the Typescript version, this state is managed by the `MachineState` class in `vm.ts`. In the Solidity version, it is represented by the `Machine` struct in `EVMProver.sol`.

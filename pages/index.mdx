@@ -1,16 +1,21 @@
 ## Introduction
 
-The EVM Gateway is an [open source codebase](https://github.com/unruggable-labs/evmgateway-v2/tree/main/v2) offering an end to end solution for resolving data from EVM compatible blockchains whilst inheriting the security guarantees of Layer 1 Ethereum mainnet.
+The EVM Gateway is an [open-source project](https://github.com/unruggable-labs/evmgateway-v2/tree/main/v2) that provides a complete solution for fetching data from EVM-compatible blockchains through contracts deployed on Layer 1 Ethereum mainnet.
 
-The core elements of the solution are outlined in our [Architecture](/architecture) section.
+This documentation provides:
 
+- An overview of the solution’s [architecture](/architecture)
+- Details about the [virtual machine](/virtual-machine)
+- Several [examples](/examples) to help you get started
 
-## Motivations
+The codebase is designed to be flexible so it can work with new blockchains in the future.
 
-The v2 of the codebase offers a clear concise public API to a flexible internal stack based virtual machine that caters for the more complex use cases that we have seen when working with smart contracts.
+## Features
 
-The solution offers (amongst other things):
-- Multi target support
+The codebase offers a simple public API and a flexible internal virtual machine.
+
+Key features of the solution include:
+- Support for multiple targets
 - In request data manipulation (keccak256, slicing etc)
 - Nested request evaluation (for complex data architectures e.g. the proposed ENS v2 specification)
 

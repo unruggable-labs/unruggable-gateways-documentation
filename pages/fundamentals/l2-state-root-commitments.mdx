@@ -1,18 +1,17 @@
-# L2 state root commitments
+# L2 State Root Commitments
 
-Some L2s (for example [Optimism](https://www.optimism.io/) and [Arbitrum](https://arbitrum.io/)) periodically commit their state root to the Ethereum mainnet (L1). This root represents the entire L2 state.
+Our [verifiers](/architecture#4-verifiers) check proofs of L2 state against L2 [state roots](/fundamentals/what-is-a-state-root) that are posted on Ethereum Mainnet or derived from ZK proofs that are posted and verified on L1 Mainnet. This root represents the entire L2 state. By anchoring their state roots on L1, L2s can benefit from Ethereum's security. L2s can handle many transactions but only need to post a single, much smaller state root (or ZK Proof). This greatly lowers L1 gas costs.
 
-By anchoring their state roots on L1, L2s can inherit Ethereum's security.
+## Rollup Addresses
 
-L2s can process many transactions and only need to commit the final state root to L1. This significantly reduces L1 gas costs.
+Below are the (mainnet) rollup contracts for several popular L2 solutions:
 
-Users can then verify inclusion proofs of L2 state by verifying their inclusion in the Merkle trie represented by the state roots posted on Ethereum mainnet.
-
-## Rollup addresses
-
-The (mainnet) rollup contracts for a number of popular L2s (as of July 3rd 2024) are listed below:
-
-| Rollup Solution               | Contract Name | Contract Address                                     Link                                                                 |
-|------------------------------|-----|-------------------------------------------------------------|
-| Optimism                 | OptimismPortalProxy | [`0xbEb5Fc579115071764c7423A4f12eDde41f106Ed`](https://etherscan.io/address/0xbEb5Fc579115071764c7423A4f12eDde41f106Ed)                 |
-| Arbitrum One                   | RollupProxy | [`0x5eF0D09d1E6204141B4d37530808eD19f60FBa35`](https://etherscan.io/address/0x5eF0D09d1E6204141B4d37530808eD19f60FBa35)                 |
+| Rollup Solution  | Contract Name         | Contract Address                                                                                          |
+|------------------|-----------------------|------------------------------------------------------------------------------------------------------------|
+| Arbitrum One     | RollupProxy           | [`0x5eF0D09d1E6204141B4d37530808eD19f60FBa35`](https://etherscan.io/address/0x5eF0D09d1E6204141B4d37530808eD19f60FBa35) |
+| Base             | L2OutputOracle        | [`0x56315b90c40730925ec5485cf004d835058518A0`](https://etherscan.io/address/0x56315b90c40730925ec5485cf004d835058518A0) |
+| Linea            | L1MessageService      | [`0xd19d4B5d358258f05D7B411E21A1460D11B0876F`](https://etherscan.io/address/0xd19d4B5d358258f05D7B411E21A1460D11B0876F) |
+| Optimism         | OptimismPortalProxy   | [`0xbEb5Fc579115071764c7423A4f12eDde41f106Ed`](https://etherscan.io/address/0xbEb5Fc579115071764c7423A4f12eDde41f106Ed) |
+| Taiko            | MainnetTaikoL1        | [`0x06a9Ab27c7e2255df1815E6CC0168d7755Feb19a`](https://etherscan.io/address/0x06a9Ab27c7e2255df1815E6CC0168d7755Feb19a) |
+| Scroll           | ScrollChain           | [`0xa13BAF47339d63B743e7Da8741db5456DAc1E556`](https://etherscan.io/address/0xa13BAF47339d63B743e7Da8741db5456DAc1E556) |
+| zkSync           | DiamondProxy          | [`0x32400084c286cf3e17e7b677ea9583e60a000324`](https://etherscan.io/address/0x32400084c286cf3e17e7b677ea9583e60a000324) |

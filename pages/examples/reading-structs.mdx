@@ -1,6 +1,8 @@
+# Reading structs
+
 The [solidity storage layout documentation](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html) outlines that *"The elements of structs and arrays are stored after each other, just as if they were given as individual values."*
 
-A contract defined as such:
+## Contract definition
 
 ```solidity filename="Example.sol"
     contract X {
@@ -17,9 +19,15 @@ A contract defined as such:
     }
 ```
 
+## Reading values
+
 Can have the `name` value of its constructed struct accessed as follows:
 
 ```js filename="example.js"
+
+    const OUTPUT_COUNT = 1;
+    const CONTRACT_ADDRESS = "0x123..;
+
     new EVMRequest(OUTPUT_COUNT)        //Specify the number of outputs
       .setTarget(CONTRACT_ADDRESS)      //Specify the contract address
       .setSlot(0)                       //Specify the slot number

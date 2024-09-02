@@ -1,12 +1,12 @@
-# Chains
+# Chain support
 
-We currently support a number of blockchains and are open [to supporting more](/contributing). 
+We currently support several blockchains and are open to [supporting more](/contributing).
 
-The pages that follow give a basic overview of the chains in question and outline specific implementation details in the context of our [Architecture](/architecture).
+The following pages provide an overview of these chains and explain specific implementation details in the context of our [Architecture](/architecture).
 
 We support both Optimistic Rollups ([Arbitrum](/chains/arbitrum), [Optimism](/chains/optimism), [Base](/chains/base)) and Zero Knowledge (ZK) Rollups ([Linea](/chains/linea), [Scroll](/chains/scroll), [Taiko](/chains/taiko), [zkSync](/chains/zksync)).
 
-The main differentiator of these two chain types (as it relates to proving data sourced from them) is that: 
+The key difference between these two types of chains is:
 
-- Optimistic rollups post state roots to Layer 1 that are subject to contest in line with chain specific dispute/fault proofing mechanisms.
-- ZK chains post Zero Knowledge Proofs (ZKP) to Layer 1 which allow for the verification of the correctness of transaction execution without the need to re-execute all of them. Once verification has taken place on Layer 1 the associated updated state roots are finalised and **not** subject to change/dispute.
+- **Optimistic Rollups**: They post state roots to Layer 1 (L1) that can be contested based on chain-specific dispute or fault-proof mechanisms.
+- **ZK Rollups**: They post Zero Knowledge Proofs (ZKP) to L1, which verify the correctness of transaction execution without re-executing all transactions. Once verified on L1, the updated state roots are finalized and **cannot** be disputed or changed.

@@ -1,177 +1,187 @@
+# OP Code Reference
+
+This reference outlines the integer representations of each [virtual machine](virtual-machine) OP code and the methods available through the public APIs (for both Typescript and Solidity).
+
 ### OP_DEBUG
 
-Used for debugging purposes. Outputs machine state to the console. Javascript only.
+Used for debugging. Outputs the machine state to the console. Available only in JavaScript.
 
 | Int | JS | Solidity |
 |--|--|--|
-|255 | `debug(label: string)` |  N/A |
-                                  
+| 255 | `debug(label: string)` | N/A |
+
 ### OP_TARGET
 
-- Pops the top item off the stack and uses it for operations that follow. 
+- Pops the top item off the stack and uses it as the target for the following operations.
 - Resets the slot position to 0.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
-| 1 | `target()` |             `target()`              |
+| 1 | `target()` | `target()` |
 
 ### OP_SET_OUTPUT
 
-- Pops the value at the top of the stack, and sets it as an output (at the specified index).                          
+- Pops the top value from the stack and sets it as an output at the specified index.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 2 | `setOutput(i: number)` | `setOutput(uint8 i)` |
 
-### OP_EVAL
+### OP_EVAL_LOOP
 
-Evaluates an expression or operation.                          
+Evaluates an expression or operation.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
-| 3 | `eval(opts: \{success?: boolean; failure?: boolean; acquire?: boolean; back?: number; \} = \{\})` | `eval(uint8 flags)` / `eval(uint8 flags, uint8 back)` |
+| 3 | `evalLoop(opts: {success?: boolean; failure?: boolean; acquire?: boolean; back?: number; } = {})` | `evalLoop(uint8 flags)` / `eval(uint8 flags, uint8 back)` |
+
+
+### OP_EVAL_INLINE
+| Int | JS | Solidity |
+|--|--|--|
+| 4 | `eval()` | `eval()` |
 
 ### OP_REQ_NONZERO
 
-- Requires the value to offset (by `back`) from the head of the stack to be non-zero.
-- Defaults to the value at the head of the stack.
-- If zero, sets an exit code and returns. This influences machine outcome subject to specified flags.                                 
+- Ensures the value at a specific offset (`back` from the top of the stack) is non-zero.
+- Defaults to the value at the stack's top. If zero, it sets an exit code and returns.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 10 | `requireNonzero(back = 0)` | `requireNonzero(uint8 back)` |
 
 ### OP_REQ_CONTRACT
 
-- Checks if the current target is a contract address.                
-- If zero, sets an exit code and returns. This influences machine outcome subject to specified flags.         
+- Checks if the current target is a contract address. If zero, sets an exit code and returns.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 11 | `requireContract()` | `requireContract()` |
 
 ### OP_READ_SLOTS
 
-- Reads `n` slots from the current target starting from the current `slot` defined in the machin.      
+- Reads `n` slots from the current target starting from the current `slot` defined in the machine.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 20 | `read(n = 1)` | `read()` / `read(uint8 n)` |
 
 ### OP_READ_BYTES
 
-- Reads a bytes value from storage of the current `target`.
-- Subject to the storage rules for [bytes/string](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html#bytes-and-string).                       
+- Reads a `bytes` value from the storage of the current `target`.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 21 | `readBytes()` | `readBytes()` |
 
 ### OP_READ_ARRAY
 
-- Reads array values from storage of the current `target`.                                   
+- Reads array values from the storage of the current `target`.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 22 | `readArray(step: number)` | `readArray(uint8 step)` |
 
 ### OP_SLOT_ZERO
 
-- Resets the machine `slot` to 0                             
+- Resets the machine `slot` to 0.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 30 | `zeroSlot()` | `zeroSlot()` |
 
 ### OP_SLOT_ADD
 
-- Increments the `slot` in the virtual machine by the value at the top of the stack.                               
+- Increments the `slot` in the virtual machine by the value at the top of the stack.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 31 | `addSlot()` | `addSlot()` |
 
 ### OP_SLOT_FOLLOW
 
-- Generates and updates the the machine `slot` ID for a mapping or array utilising the value at the top of the stack as the key/index.                           
+- Generates and updates the machine `slot` ID for a mapping or array using the value at the stack's top as the key/index.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 32 | `follow()` | `follow()` |
 
 ### OP_PUSH_INPUT
 
-- Pushes a value from the input register onto the stack.
+- Pushes a value from the input register onto the stack. Various helper methods exist for different types.
 
-- Pushes an input value to the input register.
-- The input index is pushed onto the ops register.      
-- Helper methods exist for different types.                    
-
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 40 | `pushInput(i: number)` / `pushStr(s: string)` / `pushBytes(v: BytesLike)` / `push(x: BigNumberish)` | `push(uint256 x)` / `push(address x)` / `push(bytes32 x)` / `push(string memory s)` / `push(bytes memory v)` / `push(EVMRequest memory x)` |
 
 ### OP_PUSH_OUTPUT
 
-- Pushes an output at index `i` onto the stack.                         
+- Pushes an output at index `i` onto the stack.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 41 | `pushOutput(i: number)` | `pushOutput(uint8 i)` |
 
 ### OP_PUSH_SLOT
 
-- Pushes the current virtual machine `slot` onto the stack.                    
+- Pushes the current virtual machine `slot` onto the stack.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 42 | `pushSlot()` | `readSlot()` |
 
 ### OP_PUSH_TARGET
 
-- Pushes the current virtual machine `target` address onto the stack.                          
+- Pushes the current virtual machine `target` address onto the stack.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 43 | `pushTarget()` | `readTarget()` |
 
 ### OP_DUP
 
-- Pushes the stack item offset from the head by `back` to the top of the stack.                   
+- Pushes the stack item offset from the head by `back` to the top of the stack.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 50 | `dup(back = 0)` | `dup(uint8 back)` |
 
 ### OP_POP
 
-- Removes the top stack item.                                    
+- Removes the top stack item.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 51 | `pop()` | `pop()` |
 
+### OP_SWAP
+
+- Swaps the item at the top of the stack with the item at the specified offset from the head.
+
+| Int | JS | Solidity |
+|--|--|--|
+| 52 | `swap(back = 1)` | `` |
+
 ### OP_KECCAK
 
-- Computes the Keccak-256 hash of the item at the head of the stack.
-- Replaces it on the stack.                   
+- Computes the Keccak-256 hash of the item at the head of the stack and replaces it on the stack.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 60 | `keccak()` | `keccak()` |
 
 ### OP_CONCAT
 
-- Pops and concatenates the last `back` items on the stack.                                      
+- Pops and concatenates the last `back` items on the stack.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
 | 61 | `concat(back: number)` | `concat(uint8 n)` |
 
 ### OP_SLICE
 
-- Slices `n` bytes from the value at the head of the stack from offset `x`.
+- Slices `n` bytes from the value at the head of the stack starting from offset `x`.
 
- Int | JS | Solidity |
+| Int | JS | Solidity |
 |--|--|--|
-| 62 | `slice(x: number, n: number)` | `slice(uint16 pos, uint16 len)` |          
+| 62 | `slice(x: number, n: number)` | `slice(uint16 pos, uint16 len)` |

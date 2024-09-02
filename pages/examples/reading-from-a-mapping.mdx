@@ -1,4 +1,6 @@
-For a contract defined as follows:
+# Reading a mapping
+
+## Contract definition
 
 ```solidity filename="Example.sol"
     contract X {
@@ -10,11 +12,18 @@ For a contract defined as follows:
     }
 ```
 
+## Reading values
+
 The value at index `42` can be read as follows:
 
 ```js filename="example.js"
+
+    const OUTPUT_COUNT = 1;
+    const CONTRACT_ADDRESS = "0x123..;
+    const MAPPING_KEY = 42;
+
     new EVMRequest(OUTPUT_COUNT)        //Specify the number of outputs
-        .setTarget(C.target)            //Specify the contract address
+        .setTarget(CONTRACT_ADDRESS)            //Specify the contract address
         .setSlot(0)                     //Specify the slot number
         .push(MAPPING_KEY)              //Push the key onto the stack
         .follow()                       //Follow that key 

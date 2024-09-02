@@ -5,5 +5,9 @@
   "optimism": "Optimism",
   "taiko": "Taiko",
   "scroll": "Scroll",
-  "zksync": "zkSync"
+  "zksync": "zkSync",
+  "polygon-zkevm": {
+    "title": "Polygon zkEVM",
+    "display": "hidden"
+  }
 }
