@@ -1,10 +1,10 @@
 # Architecture
 
-The [v2 EVM Gateway codebase](https://github.com/unruggable-labs/evmgateway-v2/tree/main/v2) includes both a [Typescript](https://github.com/unruggable-labs/evmgateway-v2/blob/main/v2/src/vm.ts) and a [Solidity](https://github.com/unruggable-labs/evmgateway-v2/blob/main/v2/contracts/EVMProver.sol) version of the virtual machine. The idea is simple: write your code in Typescript to read data from your chosen Layer 2 (L2) network, then easily convert it to Solidity and deploy it without changes.
+The [Unruggable Gateways codebase](https://github.com/unruggable-labs/unruggable-gateways/) includes both a [Typescript](https://github.com/unruggable-labs/unruggable-gateways/tree/main/src/vm.ts) and a [Solidity](https://github.com/unruggable-labs/unruggable-gateways/tree/main/contracts/GatewayProver.sol) version of the virtual machine. The idea is simple: write your code in Typescript to read data from your chosen Layer 2 (L2) network, then easily convert it to Solidity and deploy it without changes.
 
 ## How It Works (High-Level Overview)
 
-1.	**Contract Definition**: A contract defines an `EVMRequest`. This request is passed to the fetch method defined in `EVMFetchTarget.sol`.
+1.	**Contract Definition**: A contract defines an `GatewayRequest`. This request is passed to the fetch method defined in `GatewayFetchTarget.sol`.
 2.	**Offchain Data Handling**: The fetch method uses the [ERC-3668](https://eips.ethereum.org/EIPS/eip-3668) standard and reverts with an `OffchainLookup`, instructing the client to query the Gateway.
 3.	**Response Processing**: The `fetchCallback` method processes the response, using a chain-specific "Verifier" to validate proofs and return the results to the caller.
 
@@ -12,14 +12,14 @@ The [v2 EVM Gateway codebase](https://github.com/unruggable-labs/evmgateway-v2/t
 
 ### 1. Request Builder
 
-- `EVMFetcher.sol` provides a [public API](/op-code-reference) for creating an `EVMRequest`. This request consists of a series of operations that the virtual machine interprets to read and process data from other blockchains.
-- Solidity developers can write contracts that build these requests by inheriting from `EVMFetchTarget.sol`.
+- `GatewayFetcher.sol` provides a [public API](/op-code-reference) for creating an `GatewayRequest`. This request consists of a series of operations that the virtual machine interprets to read and process data from other rollups.
+- Solidity developers can write contracts that build these requests by inheriting from `GatewayFetchTarget.sol`.
 - A Typescript version is also available for easier development and testing. You can check out our [Examples](/examples) page for more details.
 
 ### 2. The Gateway
 
-- The `gateway.ts` Typescript file sets up a simple HTTP server to handle requests for data from other blockchains. It uses a “Rollup” as a parameter (explained below).
-- The gateway connects to the necessary blockchain to gather data, create proofs, and send them back to the client, so users don’t have to interact directly with the blockchains.
+- The `gateway.ts` Typescript file sets up a simple HTTP server to handle requests for data from other rollups. It uses a “Rollup” as a parameter (explained below).
+- The gateway connects to the necessary rollup to gather data, create proofs, and send them back to the client, so users don’t have to interact directly with the rollups.
 
 ### 3. The Rollup
 
@@ -36,7 +36,7 @@ The [v2 EVM Gateway codebase](https://github.com/unruggable-labs/evmgateway-v2/t
 ### 4. Verifiers
 
 - A Verifier is a Solidity contract deployed on L1. It is used by the ERC 3668 callback to verify the data sent from the gateway server.
-- Different chains utilize different hashing functions and Trie structures. Verifiers use different verification steps based on the blockchain. Helper contracts are used include `EthTrieHooks.sol` and `LineaTrieHooks.sol`.
+- Different chains utilize different hashing functions and Trie structures. Verifiers use different verification steps based on the rollup. Helper contracts are used include `EthTrieHooks.sol` and `LineaTrieHooks.sol`.
 
 #### Gateway URL
 
@@ -44,4 +44,4 @@ The [v2 EVM Gateway codebase](https://github.com/unruggable-labs/evmgateway-v2/t
 
 #### Context
 
-- Each Verifier implements the `getLatestContext` method from the `IEVMVerifier` interface. This method determines what L2 chain state the request can access. The gateway considers this context when responding and includes it in its response.
+- Each Verifier implements the `getLatestContext` method from the `IVerifier` interface. This method determines what L2 chain state the request can access. The gateway considers this context when responding and includes it in its response.

@@ -34,7 +34,7 @@ OP Stack chains use the standard Patricia Merkle Trie. Proof data is verified us
 
 The `OutputRootProof` is [defined by Optimism](https://github.com/ethereum-optimism/optimism/blob/5a5dd8f44161e8e05093d92b32e102eb38fe78b6/packages/contracts-bedrock/src/libraries/Types.sol#L25-L30) as:
 
-```
+```solidity
     struct OutputRootProof {
         bytes32 version;
         bytes32 stateRoot;

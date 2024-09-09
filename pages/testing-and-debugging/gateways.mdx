@@ -2,7 +2,7 @@
 
 The `gateway` folder holds individual test files for each of the [chains](/chains) that we support.
 
-Each file deploys a Solidity contract (`SlotDataReader.sol`) to a locally running `anvil` node that executes a series of predefined `EVMRequest`s against a helper contract (`SlotDataContract.sol`) deployed to the network in question. The contract includes properties that test the many complex storage rules outlined in the Solidity documentation: [Layout of State Variables in Storage](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html).
+Each file deploys a Solidity contract (`SlotDataReader.sol`) to a locally running `anvil` node that executes a series of predefined `GatewayRequest`s against a helper contract (`SlotDataContract.sol`) deployed to the network in question. The contract includes properties that test the many complex storage rules outlined in the Solidity documentation: [Layout of State Variables in Storage](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html).
 
 ## Running Tests
 

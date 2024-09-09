@@ -11,14 +11,14 @@ export default {
     </>
   ),
   project: {
-    link: 'https://github.com/unruggable-labs/evmgateway-v2/'
+    link: 'https://github.com/unruggable-labs/unruggable-gateways/'
   },
   useNextSeoProps() {
     return {
       titleTemplate: '%s – Gateway Documentation',
     }
   },
-  docsRepositoryBase: 'https://github.com/unruggable-labs/evmgateway-v2-docs/',
+  docsRepositoryBase: 'https://github.com/unruggable-labs/unruggable-gateways-documentation/blob/main/',
   sidebar: {
     defaultMenuCollapsed: false,
     toggleButton: true,

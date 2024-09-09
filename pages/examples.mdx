@@ -1,6 +1,6 @@
 # Examples
 
-The pages contained within this section of the documentation outline conceptually (with code snippets) how to write a virtual machine request (`EVMRequest`) to read and verify data from another blockchain.
+The pages contained within this section of the documentation outline conceptually (with code snippets) how to write a virtual machine request (`GatewayRequest`) to read and verify data from another rollup.
 
 For example, there are pages outlining how to:
 
@@ -8,10 +8,24 @@ For example, there are pages outlining how to:
 - [Read from a Struct](/examples/reading-structs)
 - [Read from a mapping](/examples/reading-from-a-mapping)
 
-In addition to these examples, we maintain a repository of [gateway examples](https://github.com/unruggable-labs/gateway-examples) that have simple, documented examples that can be run with a single line of code. For example:
+## Typescript examples
+
+We maintain a repository of [gateway examples](https://github.com/unruggable-labs/unruggable-gateways-examples) that utilize the [Typescript implementation](https://github.com/unruggable-labs/unruggable-gateways/tree/main/src/vm.ts) of our virtual machine to provide simple, documented examples that can be run with a single line of code. For example:
 
 ```bash
 bun tsx examples/6-keccak-of-concat-as-key-with-debug.ts
 ``` 
 
-These example utilise our npm package [@unruggable/evmgateway](https://www.npmjs.com/package/@unruggable/evmgateway) which offers a quick and easy way to get started with our codebase.
+These example utilise our npm package [@unruggable/gateways](https://www.npmjs.com/package/@unruggable/gateways) which offers a quick and easy way to get started with our codebase.
+
+## Solidity examples
+
+We also maintain a repository that demonstrates full end to end [ENS name resolution](https://github.com/unruggable-labs/unruggable-gateways-op-stack-ens-resolution-demo) using the solution.
+
+It utilises [Foundry](https://github.com/foundry-rs) (through [blocksmith.js](https://github.com/adraffy/blocksmith.js)) to fork **Ethereum mainnet** and deploy an instance of `OPFaultVerifier`. This verifier is used to verify proofs returned by Unruggable's Optimism gateway running at `https://op-gateway.unruggable.com`.
+
+The gateway is fetching data proofs from the **real** Optimism Mainnet. This repo includes:
+
+- `ExampleResolver.sol` which resolves against an address stored in our standard `SlotDataContract` (deployed [here](https://optimistic.etherscan.io/address/0xf9d79d8c09d24e0C47E32778c830C545e78512CF#code)).
+
+- `OPResolver.sol` which resolves against a [storage contract](https://optimistic.etherscan.io/address/0xc695404735E0F1587A5398a06cAB34D7d7b009Da#code) that implements  a PoC of the complex resolution logic outlined in the ENS v2 specification.

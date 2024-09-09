@@ -1,6 +1,6 @@
 # Virtual Machine
 
-Our stack-based virtual machine is designed to read data from EVM-compatible blockchains and generate proofs to verify that the data is correct.
+Our stack-based virtual machine is designed to read data from EVM-compatible rollups and generate proofs to verify that the data is correct.
 
 ## Commands
 
@@ -15,7 +15,7 @@ Operations can use inputs from the `inputs` register, work with items on the sta
 
 ## Requests
 
-A virtual machine request (`EVMRequest`) specifies how many outputs it expects, and how those outputs should be fetched.
+A virtual machine request (`GatewayRequest`) specifies how many outputs it expects, and how those outputs should be fetched.
 
 Requests can include additional programs inside them for more complex scenarios.
 
@@ -32,4 +32,4 @@ The virtual machine keeps track of several pieces of internal state:
 - **`slot`**: The storage slot ID where we are fetching data.
 - **`stack`**: The VM stack, which helps manage execution states and data in an organized way.
 
-In the Typescript version, this state is managed by the `MachineState` class in `vm.ts`. In the Solidity version, it is represented by the `Machine` struct in `EVMProver.sol`.
+In the Typescript version, this state is managed by the `MachineState` class in `vm.ts`. In the Solidity version, it is represented by the `Machine` struct in `GatewayProver.sol`.

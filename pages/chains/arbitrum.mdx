@@ -18,7 +18,7 @@ Arbitrum has a fully implemented disection based dispute resolution process refe
 
 ### Context
 
-The [context](/architecture#context) used is returned from the `latestConfirmed()` method of the Arbitrum rollup contract. The integer returned is the ID of the latest confirmed `RBlock` which represents a batch of transactions or state transitions that are bundled together and committed to the Ethereum blockchain.
+The [context](/architecture#context) used is returned from the `latestConfirmed()` method of the Arbitrum rollup contract. The integer returned is the ID of the latest confirmed `RBlock` which represents a batch of transactions or state transitions that are bundled together and committed to Ethereum mainnet.
 
 ### Commit
 
@@ -28,7 +28,7 @@ This process of fetching the `sendRoot` is outlined in the Arbitrum documentatio
 
 We filter the `NodeCreated` event for the latest confirmed `RBlock`
 
-```
+```solidity
 event NodeCreated(
     uint64 indexed nodeNum,
     bytes32 indexed parentNodeHash,
