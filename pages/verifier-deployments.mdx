@@ -1,16 +1,22 @@
-## Verifier Deployments
+# Verifier Deployments
 
-Verifiers are deployed on Layer 1 Ethereum Mainnet at the following addresses:
+Verifiers are deployed on Layer 1 Ethereum Mainnet.
 
-**Note (21st August 24)** - Full deployment data coming soon.
+The entry point for each verifier is a [TransparentUpgradeableProxy](https://docs.openzeppelin.com/contracts/5.x/api/proxy#TransparentUpgradeableProxy). 
 
-| Chain | Address |
-|-------|-------|
-| Arbitrum |  |
-| Base |  |
-| Linea |  |
-| Optimism | [0xbf6d2C96547Bb015961cb38D30596a781C7039e1](https://etherscan.io/address/0xbf6d2C96547Bb015961cb38D30596a781C7039e1#code) |
-| Taiko |  |
-| Scroll |  |
-| zkSync |  |
+The verifier implementations access configuration data stored at the proxy level. This pattern allows us to deploy verifiers in a cost effective manner for chains whereby the verification process is the same but configuration differs. For example [Arbitrum](/chains/arbitrum) Orbit chains can all utilize one verifier implementation as can [Optimism](/chains/optimism) Superchains.
+
+## Current Deployments
+
+**Note (9th September 2024)** - Full deployment data coming soon.
+
+| Chain | Proxy | Implementation |
+|-------|-------|--- |
+| Arbitrum |  | |
+| Base |  | |
+| Linea |  | |
+| Optimism | [0x76396Ee24C51EC8F4B00AF2EC54087af84B5cA3E](https://etherscan.io/address/0x76396Ee24C51EC8F4B00AF2EC54087af84B5cA3E#code) | [0x30e443dbd8749bbfa1ad39c86380f2e11371e242](https://etherscan.io/address/0x30e443dbd8749bbfa1ad39c86380f2e11371e242#code) |
+| Taiko |  | |
+| Scroll |  | |
+| zkSync |  | |
 
