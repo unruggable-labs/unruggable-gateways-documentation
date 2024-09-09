@@ -15,8 +15,8 @@ The codebase is designed to be flexible so it can work with new rollups in the f
 The codebase offers a simple public API and a flexible internal virtual machine.
 
 Key features of the solution include:
-- Support for multiple targets
-- In request data manipulation (keccak256, slicing etc)
-- Nested request evaluation (for complex data architectures e.g. the proposed ENS v2 specification)
+- **Multiple targets**. You can fetch data from multiple contracts and use the results of one query as an input into the next.
+- **Data manipulation**. You can fetch a piece of data and then manpulate it. For example you could fetch a string and return a its `keccak256` hash or you could return a slice of a larger `bytes` value.
+- **Nested requests**. You can nest requests to allow you to do more complicated data manipulation and allow for conditional outputs. There is an example of this more advanced functionality [here](http://127.0.0.1:3000/examples) demonstrating the proposed [ENS v2 specification](https://blog.ens.domains/post/ensv2).
 
 If you have a use case that is not supported, please [get in touch](https://unruggable.com/contact) and/or consider [contributing](/contributing).
