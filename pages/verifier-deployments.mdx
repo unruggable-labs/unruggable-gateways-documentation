@@ -20,3 +20,10 @@ The verifier implementations access configuration data stored at the proxy level
 | Scroll |  | |
 | zkSync |  | |
 
+## Upgradability
+
+The proxy contracts currently deployed on Layer 1 are owned by an externally owned account (EOA) controlled by Unruggable. Our goal is to transfer ownership of these contracts to a multisignature wallet managed by a council of trusted individuals once any remaining issues have been resolved.
+
+We understand the critical importance of establishing a credible path toward censorship resistance and decentralization. It is essential to note that a malicious verifier implementation could potentially allow invalid ‘proofs’ to be verified on Layer 1. To mitigate this risk, all our smart contracts are open-source and verified on Etherscan.
+
+Furthermore, we aim to provide a user-friendly interface that enables entities using our virtual machine to easily clone the verifier proxy contract. This approach allows them to retain full control over their verifier implementation, ensuring greater flexibility and security.
