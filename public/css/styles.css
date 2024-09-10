@@ -3,3 +3,12 @@
   max-width: 300px;
   max-height: 100px;
 }
+
+.warning {
+  background: #ffe7e7;
+  padding: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}

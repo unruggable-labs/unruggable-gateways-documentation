@@ -1,72 +1,124 @@
 # Quickstart
 
+
+**NOTE: This quickstart is currently being updated.**
+
 This quickstart outlines how to deploy the appropriate contracts for resolving an ENS domain from one of our supported [chains](./chains).
 
-First checkout the repo: `https://github.com/unruggable-labs/unruggable-gateways.git`
+## 1. Initial setup
 
-## Deploy a data contract
+Run these commands: 
 
-This contract gets deployed to the L2 rollup of your choice.
+```bash
+mkdir quickstart
+cd quickstart
+git init
+forge install https://github.com/unruggable-labs/unruggable-gateways
+mkdir contracts
+```
 
-Replace `YOUR-ADDRESS-HERE` with your desired resolution address.
+## 2. Create a `foundry.toml`
+
+- Add the following configuration.
+
+```bash
+[profile.default]
+src = "contracts"
+libs = ["lib"]
+solc = "0.8.25"
+
+
+remappings = [
+    "@unruggable=lib/unruggable-gateways/"
+]
+```
+
+## 2. Deploy a data contract to L2
+
+- Create a file in your `contracts` directory called `L2DataContract.sol`
+- Copy the code below.
+- Replace `YOUR-ADDRESS-HERE` with your desired resolution address.
+- Save the file.
+
+**Contract code**
 
 ```solidity filename="L2DataContract.sol"
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
 contract L2DataContract {
-    address slot0 = "YOUR-ADDRESS-HERE";
+    address slot0 = YOUR-ADDRESS-HERE;
 }
 ```
 
-Replace the placeholders in the following deployment command.
+- Replace `CHAIN-IDENTIFIER` the the appropriate Alchemy subdomain for the L2 rollup you want to deploy to.
+- Replace `YOUR-API-KEY` with your Alchemy API key.
+- Replace `YOUR-PRIVATE-KEY` with your deployment private key.
+- Run the command.
 
 ```bash
 forge create --rpc-url https://CHAIN-IDENTIFIER.g.alchemy.com/v2/YOUR-API-KEY --private-key YOUR-PRIVATE-KEY contracts/L2DataContract.sol:L2DataContract
 ```
 
-## Deploy a resolver
+## 3. Deploy a resolver to L1
 
-This should be deployed to L1 Ethereum mainnet.
+- Create a file in your `contracts` directory called `L1SimpleResolver.sol`
+- Copy the code below.
+- Save the file.
 
 ```solidity filename="L1SimpleResolver.sol"
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
+ 
+import  "@unruggable/contracts/GatewayProtocol.sol";
+import {GatewayFetcher, GatewayRequest} from "@unruggable/contracts/GatewayFetcher.sol";
+import {GatewayFetchTarget, IGatewayProofVerifier} from "@unruggable/contracts/GatewayFetchTarget.sol";
 
-import {GatewayFetchTarget, IGatewayProofVerifier} from "@unruggable/gateways/contracts/GatewayFetchTarget.sol";
-import {GatewayFetcher, GatewayRequest} from "@unruggable/gateways/contracts/GatewayFetcher.sol";
+import "forge-std/console2.sol"; // DEBUG
 
-contract SimpleResolver is GatewayFetchTarget {
+contract L1SimpleResolver is GatewayFetchTarget {
 	using GatewayFetcher for GatewayRequest;
+
 	IGatewayProofVerifier immutable _verifier;
-	address immutable _target;
+	address immutable _exampleAddress;
 
-	constructor(IGatewayProofVerifier verifier, address target) {
+	constructor(IGatewayProofVerifier verifier, address exampleAddress) {
 		_verifier = verifier;
-		_target = target;
+        _exampleAddress = exampleAddress;
 	}
 
-	function addressCallback(bytes[] memory m, uint8, bytes memory) external pure returns (string memory) {
-		return address(m[0]);
+    function supportsInterface(bytes4 x) external pure returns (bool) {
+		return x == 0x3b3b57de; //See https://docs.ens.domains/ensip/1
 	}
 
-	function resolve(bytes32 node) public view returns (address) {
-		GatewayRequest memory r = GatewayFetcher.newRequest(1).setTarget(_target);
-		r.setSlot(1).readBytes().setOutput(0);
-		fetch(_verifier, r, this.addressCallback.selector, '');
+    function addr(bytes32 node) public view returns (address) {
+
+        GatewayRequest memory r = GatewayFetcher
+            .newRequest(1)
+            .setTarget(_exampleAddress)
+            .setSlot(11)
+            .read()
+            .debug("lol")
+            .setOutput(0);
+
+		fetch(_verifier, r, this.addrCallback.selector, '');    
+	}
+	
+    function addrCallback(bytes[] calldata values, uint8, bytes calldata extraData) external pure returns (address) {
+        return abi.decode(values[0], (address));
 	}
 }
 ```
 
-Replace the placeholders in the following deployment command.
-
-The `VERIFIER-ADDRESS` for your chosen L2 chain can be found [here](/verifier-deployments).
+- Replace `VERIFIER-ADDRESS` with the verifier address for your chosen L2. This can be found [here](/verifier-deployments).
+- Replace `THE-ADDRESS-OF-THE-CONTRACT-YOU-DEPLOYED-IN-THE-LAST-STEP` with.. you guessed it ;)
+- Run the command.
 
 ```bash
-forge create --rpc-url https://eth-mainnet.g.alchemy.com/v2/YOUR-API-KEY --private-key YOUR-PRIVATE-KEY contracts/L1SimpleResolver.sol:L1SimpleResolver
+forge create --rpc-url https://eth-mainnet.g.alchemy.com/v2/YOUR-API-KEY --private-key YOUR-PRIVATE-KEY contracts/L1SimpleResolver.sol:L1SimpleResolver --constructor-args VERIFIER-ADDRESS THE-ADDRESS-OF-THE-CONTRACT-YOU-DEPLOYED-IN-THE-LAST-STEP
 ```
 
-## Set your resolver
+## 4. Set your resolver
 
 Set the resolver for your ENS name to the address of the deployed L1 Resolver.
 
@@ -77,8 +129,17 @@ You can do this through the [ENS App](https://app.ens.domains/)
 Alternatively you can use the following command having replaced the placeholders.
 
 ```bash
-cast send 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e "setResolver(bytes32,address)" $(cast namehash "MY-ENS-NAME") RESOLUTION-ADDRESS --private-key YOUR-PRIVATE-KEY --rpc-url https://eth-mainnet.g.alchemy.com/v2/YOUR-API-KEY
+cast send 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e "setResolver(bytes32,address)" $(cast namehash "MY-ENS-NAME") RESOLVER-ADDRESS --private-key YOUR-PRIVATE-KEY --rpc-url https://eth-mainnet.g.alchemy.com/v2/YOUR-API-KEY
 ```
+
+## 5. Verify
+
+- To verify that your name is resolving appropriately type the name into the [ENS Whois](https://ethtools.com/ens-whois) tool and verify the output of the lookup.
+
+<div class = "warning mt-20">
+	<p>**!!** The finalization times for rollup state varies on a chain by chain basis.</p> 
+	<p>**!!** Your name **will not resolve** until the data is finalized.</p>
+</div>
 
 ## Help me !
 
