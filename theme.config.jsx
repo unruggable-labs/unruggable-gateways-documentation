@@ -13,6 +13,9 @@ export default {
   project: {
     link: 'https://github.com/unruggable-labs/unruggable-gateways/'
   },
+  chat: {
+    link: 'https://discord.gg/rVCaAvqzCA'
+  },
   useNextSeoProps() {
     return {
       titleTemplate: '%s – Gateway Documentation',
