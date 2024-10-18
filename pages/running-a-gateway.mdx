@@ -32,12 +32,8 @@ ANKR_KEY
 
 ## Run it
 
-- Run the gateway using the following commands:
+* `bun run serve <chain> [port]`
+	* Chains: `arb1` `base-testnet` `base` `blast` `celo-alfajores` `cyber` `fraxtal` `lineaV1` `linea` `mantle` `mode` `op` `opbnb` `polygon` `redstone` `reverse-op` `scroll` `self-eth` `self-holesky` `self-sepolia` `shape` `taiko` `zksync` `zora`
+	* Default port: `8000`
 
-```bash 
-bun run serve <chain> [port]
-````
-
-**Supported chains:** `arb1` `base` `blast` `fraxtal` `linea` `op` `polygon` `scroll` `taiko` `zksync` `zora`
-
-**Default port:** `8000`
+The latest chain identifiers can be seen in the [source code](https://github.com/unruggable-labs/unruggable-gateways/blob/main/scripts/serve.ts).
