@@ -1,9 +1,6 @@
-# Quickstart
+# Quick(ish)start
 
-
-**NOTE: This quickstart is currently being updated.**
-
-This quickstart outlines how to deploy the appropriate contracts for resolving an ENS domain from one of our supported [chains](./chains).
+This quickstart outlines how to deploy a solution for resolving an ENS domain from one of our supported [chains](./chains).
 
 ## 1. Initial setup
 
@@ -27,7 +24,6 @@ src = "contracts"
 libs = ["lib"]
 solc = "0.8.25"
 
-
 remappings = [
     "@unruggable=lib/unruggable-gateways/"
 ]
@@ -38,7 +34,6 @@ remappings = [
 - Create a file in your `contracts` directory called `L2DataContract.sol`
 - Copy the code below.
 - Replace `YOUR-ADDRESS-HERE` with your desired resolution address.
-- Save the file.
 
 **Contract code**
 
@@ -51,23 +46,17 @@ contract L2DataContract {
 }
 ```
 
-- Replace `YOUR-RPC-URL` with the RPC url for the L2 rollup you want to deploy to.
-- Replace `YOUR-API-KEY` with your Alchemy API key.
+- Replace `YOUR-L2-RPC-URL` with the RPC url for the L2 rollup you want to deploy to.
 - Replace `YOUR-PRIVATE-KEY` with your deployment private key.
 - Run the command.
 
 ```bash
-forge create --rpc-url YOUR-RPC-URL --private-key YOUR-PRIVATE-KEY contracts/L2DataContract.sol:L2DataContract
+forge create --rpc-url YOUR-L2-RPC-URL --private-key YOUR-PRIVATE-KEY contracts/L2DataContract.sol:L2DataContract
 ```
 
 You should get an output similar to the below:
 
 ```bash
-[⠊] Compiling...
-[⠒] Compiling 1 files with Solc 0.8.25
-[⠢] Solc 0.8.25 finished in 25.56ms
-Compiler run successful!
-Deployer: 0x31A74F3862193636120158D71860cA72bAf7A8cA
 Deployed to: 0xbf6d2C96547Bb015961cb38D30596a781C7039e1
 Transaction hash: 0x734bcee537c67bb4af120189ebdb90afebcdf1422568987a09546a55092808fc
 ```
@@ -76,7 +65,6 @@ Transaction hash: 0x734bcee537c67bb4af120189ebdb90afebcdf1422568987a09546a550928
 
 - Create a file in your `contracts` directory called `L1SimpleResolver.sol`
 - Copy the code below.
-- Save the file.
 
 ```solidity filename="L1SimpleResolver.sol"
 // SPDX-License-Identifier: MIT
@@ -98,17 +86,16 @@ contract L1SimpleResolver is GatewayFetchTarget {
 	}
  
     function supportsInterface(bytes4 x) external pure returns (bool) {
-		return x == 0x3b3b57de; //See https://docs.ens.domains/ensip/1
+		return x == 0x01ffc9a7 /*https://eips.ethereum.org/EIPS/eip-165*/ || x == 0x3b3b57de; /*https://docs.ens.domains/ensip/1*/
 	}
- 
+
     function addr(bytes32 node) public view returns (address) {
  
         GatewayRequest memory r = GatewayFetcher
             .newRequest(1)
             .setTarget(_exampleAddress)
-            .setSlot(11)
+            .setSlot(0)
             .read()
-            .debug("lol")
             .setOutput(0);
  
 		fetch(_verifier, r, this.addrCallback.selector);    
@@ -120,7 +107,14 @@ contract L1SimpleResolver is GatewayFetchTarget {
 }
 ```
 - Replace `YOUR-L1-RPC-URL` with the RPC URL for your *Layer 1* node.
+- Replace `YOUR-PRIVATE-KEY` with your deployment private key.
 - Replace `VERIFIER-ADDRESS` with the verifier address for your chosen L2. This can be found [here](/verifier-deployments).
+
+<div class = "yellow mt-20">
+	<p>**!!** Take note of finalization times.</p> 
+    <p>**!!** Our Sepolia Verifiers/Gateways relax finalization rules for speed of development. [Read more](/verifier-deployments).</p> 
+</div>
+
 - Replace `THE-ADDRESS-OF-THE-CONTRACT-YOU-DEPLOYED-IN-THE-LAST-STEP` with.. you guessed it ;)
 - Run the command.
 
@@ -132,10 +126,8 @@ You should get an output similar to the below:
 
 ```
 [⠊] Compiling...
-No files changed, compilation skipped
-Deployer: 0x31A74F3862193636120158D71860cA72bAf7A8cA
-Deployed to: 0x356A1bFBF8F5cDc6e7755D4d90D7E67Eeb12ad73
-Transaction hash: 0xc021acd611aa2a5b8c4a530bc9bc85393bd3b9c6878c13cb3ab2ce88181a0668
+Deployed to: 0x44A40a4479E49e54B51269d2a143bB428205A806
+Transaction hash: 0x61a7705f137a55bb2c7c3ddedc54ede64dfd6d856c8a1d31faf2fbb1339e7932
 ```
 
 ## 4. Set your resolver
@@ -148,21 +140,6 @@ You can do this through the [ENS App](https://app.ens.domains/).
 
 ![Update resolver using the ENS App](/images/docs/update-resolver-ens-app.png)
 
-Alternatively you can use the following command.
-
-**Note: ** This assumes that your name is **not wrapped**.
-
-- `0x00000000000C2E074eC69A0dFb2997BA6C7d2e1ez` is the [ENS Registry address](https://docs.ens.domains/learn/deployments) on Mainnet, Sepolia, and Holesky.
-- Replace `MY-ENS-NAME` with your ENS name e.g. `unruggable.eth`
-- Replace `RESOLVER-ADDRESS` with the address of the resolver you deployed in the last step.
-- Replace `YOUR-PRIVATE-KEY` with your accounts private key
-- Replace `YOUR-L1-RPC-URL` with the RPC URL for your *Layer 1* node.
-
-
-```bash
-cast send 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e "setResolver(bytes32,address)" $(cast namehash "MY-ENS-NAME") RESOLVER-ADDRESS --private-key YOUR-PRIVATE-KEY --rpc-url YOUR-L1-RPC-URL
-```
-
 ## 5. Verify
 
 - Verify that your name resolves as expected.
@@ -173,10 +150,7 @@ This easiest way to do this is to view your names profile on the ENS App:
 https://app.ens.domains/YOUR-NAME-HERE.eth
 ```
 
-<div class = "warning mt-20">
-	<p>**!!** The finalization times for rollup state varies on a chain by chain basis.</p> 
-	<p>**!!** Your name **will not resolve** until the data is finalized.</p>
-</div>
+For example you can see that [`ethglobal.eth`](https://app.ens.domains/ethglobal.eth) resolves using this exact solution on Sepolia.
 
 ## Help me !
 
