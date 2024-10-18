@@ -18,18 +18,10 @@ We maintain a repository of [gateway examples](https://github.com/unruggable-lab
 bun tsx examples/6-keccak-of-concat-as-key-with-debug.ts
 ``` 
 
-These example utilise our npm package [@unruggable/gateways](https://www.npmjs.com/package/@unruggable/gateways) which offers a quick and easy way to get started with our codebase.
+These examples utilise our npm package [@unruggable/gateways](https://www.npmjs.com/package/@unruggable/gateways) which offers a quick and easy way to get started with our codebase.
 
 ## Solidity examples
 
 ![Resolution Demo](https://github.com/unruggable-labs/unruggable-gateways-ens-resolution-demos/actions/workflows/resolution-demo.yml/badge.svg)
 
 We also maintain a repository that demonstrates full end to end [ENS name resolution](https://github.com/unruggable-labs/unruggable-gateways-ens-resolution-demos) using the solution.
-
-It utilises [Foundry](https://github.com/foundry-rs) (through [blocksmith.js](https://github.com/adraffy/blocksmith.js)) to fork **Ethereum mainnet** and deploy an instance of `OPFaultVerifier`. This verifier is used to verify proofs returned by Unruggable's Optimism gateway running at `https://op-gateway.unruggable.com`.
-
-The gateway is fetching data proofs from the **real** Optimism Mainnet. This repo includes:
-
-- `ExampleResolver.sol` which resolves against an address stored in our standard `SlotDataContract` (deployed [here](https://optimistic.etherscan.io/address/0xf9d79d8c09d24e0C47E32778c830C545e78512CF#code)).
-
-- `OPResolver.sol` which resolves against a [storage contract](https://optimistic.etherscan.io/address/0xc695404735E0F1587A5398a06cAB34D7d7b009Da#code) that implements  a PoC of the complex resolution logic outlined in the ENS v2 specification.

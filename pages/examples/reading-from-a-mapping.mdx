@@ -22,8 +22,8 @@ The value at index `42` can be read as follows:
     const CONTRACT_ADDRESS = "0x123..;
     const MAPPING_KEY = 42;
 
-    new GatewayRequest(OUTPUT_COUNT)        //Specify the number of outputs
-        .setTarget(CONTRACT_ADDRESS)            //Specify the contract address
+    new GatewayRequest(OUTPUT_COUNT)    //Specify the number of outputs
+        .setTarget(CONTRACT_ADDRESS)    //Specify the contract address
         .setSlot(0)                     //Specify the slot number
         .push(MAPPING_KEY)              //Push the key onto the stack
         .follow()                       //Follow that key 
