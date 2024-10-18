@@ -1,35 +1,17 @@
+import { shortenAddress } from '../helpers/helpers'
+
 # Verifier Deployments
 
-Verifiers are deployed on Layer 1 Ethereum Mainnet.
+Verifiers are currently deployed on the Sepolia Ethereum testnet.
 
-The entry point for each verifier is a [TransparentUpgradeableProxy](https://docs.openzeppelin.com/contracts/5.x/api/proxy#TransparentUpgradeableProxy). 
+## Current Sepolia Deployments
 
-The verifier implementations access configuration data stored at the proxy level. This pattern allows us to deploy verifiers in a cost effective manner for chains whereby the verification process is the same but configuration differs. For example [Arbitrum](/chains/arbitrum) Orbit chains can all utilize one verifier implementation as can [Optimism](/chains/optimism) Superchains.
+The current deployments for our verifiers can be found at the following addresses on the Sepolia testnet:
 
-## Current Deployments
-
-The current deployments for our verifiers can be found by resolving the following subnames.
-
-| Chain | ENS |
-|-------|---|
-| Arbitrum | [arbitrum.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/arbitrum.verifier.unruggable.eth) |
-| Base | [base.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/base.verifier.unruggable.eth) |
-| Blast | [blast.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/blast.verifier.unruggable.eth) |
-| Fraxtal | [fraxtal.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/fraxtal.verifier.unruggable.eth) |
-| Linea | [linea.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/linea.verifier.unruggable.eth)|
-| Optimism | [optimism.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/optimism.verifier.unruggable.eth)|
-| Polygon PoS | [polygon-pos.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/polygon-pos.verifier.unruggable.eth)|
-| Taiko | [taiko.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/taiko.verifier.unruggable.eth)|
-| Scroll | [scroll.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/scroll.verifier.unruggable.eth)|
-| zkSync | [zksync.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/zksync.verifier.unruggable.eth)|
-| Zora | [zora.verifier.unruggable.eth](https://ethtools.com/ethereum-name-service/ens-whois/zora.verifier.unruggable.eth)|
-
-We transparently track any changes to these address on the [Unruggable Status Page](https://status.unruggable.com/).
-
-## Upgradability
-
-The proxy contracts currently deployed on Layer 1 are owned by an externally owned account (EOA) controlled by Unruggable. Our goal is to transfer ownership of these contracts to a multisignature wallet managed by a council of trusted individuals once any remaining issues have been resolved.
-
-We understand the critical importance of establishing a credible path toward censorship resistance and decentralization. It is essential to note that a malicious verifier implementation could potentially allow invalid ‘proofs’ to be verified on Layer 1. To mitigate this risk, all our smart contracts are open-source and verified on Etherscan.
-
-Furthermore, we aim to provide a user-friendly interface that enables entities using our virtual machine to easily clone the verifier proxy contract. This approach allows them to retain full control over their verifier implementation, ensuring greater flexibility and security.
+| Chain | Address | Gateway |
+|-------|---|---|
+| Arbitrum One Sepolia | [{shortenAddress("0x9133D1A6409b25546147229E102DFa439048028F")}](https://sepolia.etherscan.io/address/0x9133D1A6409b25546147229E102DFa439048028F#code)|[https://arbitrum-sepolia.gateway.unruggable.com](https://arbitrum-sepolia.gateway.unruggable.com)|
+| Base Sepolia | [{shortenAddress("0x408F25EEF5f8Da213Ce9D2F5b2063f14813067A2")}](https://sepolia.etherscan.io/address/0x408F25EEF5f8Da213Ce9D2F5b2063f14813067A2#code)|[https://base-sepolia.gateway.unruggable.com](https://base-sepolia.gateway.unruggable.com)|
+| Optimism Sepolia | [{shortenAddress("0x74F55F0af743f9CA5db0202fc81f589c5fDf99D4")}](https://sepolia.etherscan.io/address/0x74F55F0af743f9CA5db0202fc81f589c5fDf99D4#code)|[https://optimism-sepolia.gateway.unruggable.com](https://optimism-sepolia.gateway.unruggable.com)|
+| Linea Sepolia | [{shortenAddress("0x6AD2BbEE28e780717dF146F59c2213E0EB9CA573")}](https://sepolia.etherscan.io/address/0x6AD2BbEE28e780717dF146F59c2213E0EB9CA573#code)|[https://linea-sepolia.gateway.unruggable.com](https://linea-sepolia.gateway.unruggable.com)|
+| Scroll Sepolia | [{shortenAddress("0xd6eaADB25D5145c3b0407341292720Efd798a51f")}](https://sepolia.etherscan.io/address/0xd6eaADB25D5145c3b0407341292720Efd798a51f#code)|[https://scroll-sepolia.gateway.unruggable.com](https://scroll-sepolia.gateway.unruggable.com)|

@@ -1,35 +1,18 @@
 # Virtual Machine
 
-Our stack-based virtual machine is designed to read data from EVM-compatible rollups and generate proofs to verify that the data is correct.
+Our stack-based [virtual machine](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayVM.sol#L77) is designed to read data from EVM-compatible rollups and generate proofs that can be returned to and verified on Layer 1.
 
-## Commands
+A [`GatewayRequest`](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayRequest.sol#L4) constitutes a single `bytes` type that holds sequential OP codes(See our [Builder API Methods](/builder-api-methods)) (followed by their associated data in the case of `PUSH_` operations) that are interpreted by the virtual machine.
 
-Inside the virtual machine, there are two main registers:
+Operations manipulate the stack of the Virtual Machine to generate slot IDs and fetch/manipulate data.
 
-- **Operations register (`ops`)**: Stores the operations.
-- **Inputs register (`inputs`)**: Stores the inputs.
+A `GatewayRequest` is built using our builder interface which specifies how many outputs it expects, and how those outputs should be fetched.
 
-The [OP codes](/op-code-reference) provided by the public API define the operations the virtual machine can perform.
+There are OP codes that allow for execution of nested requests for more complex use cases.
 
-Operations can use inputs from the `inputs` register, work with items on the stack, or handle previously fetched outputs. Most OP codes are used to generate and manipulate storage slot IDs and to process the data within them.
-
-## Requests
-
-A virtual machine request (`GatewayRequest`) specifies how many outputs it expects, and how those outputs should be fetched.
-
-Requests can include additional programs inside them for more complex scenarios.
+## Evaluation
 
 Evaluation of a request returns:
 
-- **`exitCode`**: A code that shows the exit status, which is handled based on user-defined settings.
 - **`outputs`**: An array of the requested outputs.
-
-## Internal State
-
-The virtual machine keeps track of several pieces of internal state:
-
-- **`target`**: The contract we are currently fetching data from.
-- **`slot`**: The storage slot ID where we are fetching data.
-- **`stack`**: The VM stack, which helps manage execution states and data in an organized way.
-
-In the Typescript version, this state is managed by the `MachineState` class in `vm.ts`. In the Solidity version, it is represented by the `Machine` struct in `GatewayProver.sol`.
+- **`exitCode`**: A code that shows the exit status code.

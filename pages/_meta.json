@@ -3,7 +3,7 @@
   "quickstart": "Quickstart",
   "architecture": "Architecture",
   "virtual-machine": "Virtual Machine",
-  "op-code-reference": "OP Code Reference",
+  "builder-api-methods": "Builder API Methods",
   "verifier-deployments": "Verifier deployments",
   "fundamentals": "Fundamentals",
   "chains": "Chain support",

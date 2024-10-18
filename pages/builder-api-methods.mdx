@@ -1,0 +1,357 @@
+import MethodPartial from '../components/MethodPartial'
+
+# Builder API Methods
+
+This reference outlines the methods that are exposed to contract authors for building a `GatewayRequest` to read data from other chains.
+
+Internally these methods utilize [OP codes](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayRequest.sol#L15) that our  [Virtual Machine](virtual-machine) can interpret and execute.
+
+
+### Targets
+
+<i>These methods modifies the target contract for operations that follow.</i>
+
+<MethodPartial 
+    description = "Sets the target contract to the specified address."
+    js= "setTarget(x: HexString)"
+    solidity = "setTarget(address a)" />
+
+<MethodPartial 
+    description = "Sets the target contract to the top item on the stack."
+    js= "target()"
+    solidity = "target()" />
+
+### Slot Manipulation
+
+<i>These methods manipulate the slot from which data will be read when a read command is executed.</i>
+
+<MethodPartial 
+    description = {(<>Sets the current slot to <strong>x</strong>.</>)}
+    js= "setSlot(x: BigNumberish)"
+    solidity = "setSlot(uint256 x)" />
+
+<MethodPartial 
+    description = "Sets the current slot to the value at the top of the stack."
+    js= "slot()"
+    solidity = "slot()" />
+
+<MethodPartial 
+    description = {(<>Increments the current slot by <strong>x</strong>.</>)}
+    js= "offset(x: BigNumberish)"
+    solidity = "offset(uint256 dx)" />
+
+<MethodPartial 
+    description = "Increments the current slot by the value at the top of the stack."
+    js= "addSlot()"
+    solidity = "addSlot()" />
+
+<MethodPartial 
+    description = "Updates the slot based on a key defined at the top of the stack."
+    js= "follow()"
+    solidity = "follow()" />
+
+<MethodPartial 
+    description = ""
+    js= "followIndex()"
+    solidity = "followIndex()" />
+
+### Reading Values
+<i>These commands read data from the target contract.</i>
+
+<MethodPartial 
+    description = {(<>Reads the value of <strong>n</strong> slots starting from the current VM slot.</>)}
+    js= "read(n = 1)"
+    solidity = "read() / read(uint256 n)" />
+
+<MethodPartial 
+    description = "Reads the bytes value at the current storage slot."
+    js= "readBytes()"
+    solidity = "readBytes()" />
+
+<MethodPartial 
+    description = ""
+    js= "readHashedBytes()"
+    solidity = "readHashedBytes()" />
+
+<MethodPartial 
+    description = {(<><p>Reads an array value at the current storage slot.<br />The step represents the array value length (in bytes).</p></>)}
+    js= "readArray(step: number)"
+    solidity = "readArray(uint256 step)" />
+
+### Outputs
+<i>These commands set outputs that will be returned to the callback in the implementing contract.</i>
+
+<MethodPartial 
+    description = {(<>Sets the output at index <strong>i</strong> to the item at the HEAD of the stack.</>)}
+    js= "setOutput(i: number)"
+    solidity = "setOutput(uint8 i)" />
+
+<MethodPartial 
+    description = "Sets the output at the index defined at the HEAD of the stack to the value found at HEAD-1"
+    js= "output()"
+    solidity = "output()" />
+
+
+### Nested Requests
+<i>These commands allow you to evaluate nested requests.</i>
+
+<MethodPartial 
+    description = ""
+    js= "eval()"
+    solidity = "eval()" />
+
+<MethodPartial 
+    description = ""
+    js= "evalIf()"
+    solidity = "evalIf()" />
+
+<MethodPartial 
+    description = ""
+    js= "evalLoop(opts: 
+    {success?: boolean; failure?: boolean; acquire?: boolean; keep?: boolean; count?: number;} = {})"
+    solidity = "evalLoop(uint8 flags)" />
+
+
+### Exiting
+<i>These commands handle assertions, requirements, and graceful request exits.</i>
+
+<MethodPartial 
+    description = "Exit with the specified exit code."
+    js= "exit(exitCode: number)"
+    solidity = "exit(uint8 exitCode)" />
+
+<MethodPartial 
+    description = "Exit with the specified exit code if the item at the top of the stack is not zero."
+    js= "assertNonzero(exitCode: number)"
+    solidity = "assertNonzero(uint8 exitCode)" />
+
+<MethodPartial 
+    description = "Exit with the specified exit code if the current target is not a contract."
+    js= "requireContract(exitCode = 1)"
+    solidity = "requireContract(uint8 exitCode)" />
+
+<MethodPartial 
+    description = "Exit with the specified exit code if the item at the top of the stack is not zero. Leaves the item on the stack"
+    js= "requireNonzero(exitCode = 1)"
+    solidity = "requireNonzero(uint8 exitCode)" />
+
+
+### Stack Manipulation
+<i>These commands manipulate the data on the Virtual Machine's internal stack.</i>
+
+<MethodPartial 
+    description = ""
+    js= "pop()"
+    solidity = "pop()" />
+
+<MethodPartial 
+    description = ""
+    js= "dup(back = 0)"
+    solidity = "dup() / dup(uint256 back)" />
+
+<MethodPartial 
+    description = ""
+    js= "swap(back = 1)"
+    solidity = "swap() / swap(uint256 back)" />
+
+<MethodPartial 
+    description = ""
+    js= "pushOutput(i: number)"
+    solidity = "pushOutput(uint256 i)" />
+
+<MethodPartial 
+    description = ""
+    js= "pushStack(i: number)"
+    solidity = "pushStack(uint256 i)" />
+
+<MethodPartial 
+    description = ""
+    js= "push(x: BigNumberish | boolean)"
+    solidity = "" />
+
+<MethodPartial 
+    description = ""
+    js= "pushStr(s: string)"
+    solidity = "" />
+
+<MethodPartial 
+    description = ""
+    js= "pushBytes(v: BytesLike)"
+    solidity = "" />
+
+<MethodPartial 
+    description = ""
+    js= "pushProgram(program: GatewayProgram)"
+    solidity = "" />
+
+<MethodPartial 
+    description = "Pushes the current slot onto the stack."
+    js= "getSlot()"
+    solidity = "getSlot()" />
+
+<MethodPartial 
+    description = "Pushes the current target onto the stack."
+    js= "getTarget()"
+    solidity = "getTarget()" />
+
+<MethodPartial 
+    description = "Pushes the current stack size onto the stack."
+    js= "stackSize()"
+    solidity = "stackCount()" />
+
+<MethodPartial 
+    description = "Pushes onto the stack if the current target is a contract."
+    js= "isContract()"
+    solidity = "isContract()" />
+
+
+### Data Manipulation
+<i>These commands manipulate data on the stack.</i>
+
+<MethodPartial 
+    description = "Replaces the top two items on the stack with their concatentation."
+    js= "concat()"
+    solidity = "concat()" />
+
+<MethodPartial 
+    description = "Replaces the top item on the stack with its keccak256 representation."
+    js= "keccak()"
+    solidity = "keccak()" />
+
+<MethodPartial 
+    description = {(<>Slices <strong>n/len</strong> bytes from the value at the HEAD of the stack starting at position <strong>x/pos</strong></>)}
+    js= "slice(x: number, n: number)"
+    solidity = "slice(uint256 pos, uint256 len)" />
+
+<MethodPartial 
+    description = "Replaces the value at the head of the stack with its length."
+    js= "length()"
+    solidity = "length()" />
+
+<MethodPartial 
+    description = "Replaces the two items at the top of the stack with their summation."
+    js= "plus()"
+    solidity = "plus()" />
+
+<MethodPartial 
+    description = "Replaces the two items at the head of the stack with the result of subtracting the value at HEAD from the value at HEAD - 1."
+    js= "subtract()"
+    solidity = "subtract()" />
+
+<MethodPartial 
+    description = "Replaces the value at the top of the stack with its twos complement."
+    js= "twosComplement()"
+    solidity = "twosComplement()" />
+
+<MethodPartial 
+    description = "Multiplies the two values at the head of the stack and replaces them with the result."
+    js= "times()"
+    solidity = "times()" />
+
+<MethodPartial 
+    description = "Divides the value at HEAD-1 of the stack by the value at HEAD and replaces them with the result."
+    js= "divide()"
+    solidity = "divide()" />
+
+<MethodPartial 
+    description = "Calculates the  value at HEAD-1 modulo the value at HEAD and replaces them with the result."
+    js= "mod()"
+    solidity = "mod()" />
+
+<MethodPartial 
+    description = "Replaces the two items at the head of the stack with the result of the value at HEAD-1 being raised to the power of the value at HEAD."
+    js= "pow()"
+    solidity = "pow()" />
+
+
+<MethodPartial 
+    description = "Replaces the two values at the top of the stack with their Bitwise AND"
+    js= "and()"
+    solidity = "and()" />
+
+<MethodPartial 
+    description = "Replaces the two values at the top of the stack with their Bitwise OR"
+    js= "or()"
+    solidity = "or()" />
+
+<MethodPartial 
+    description = "Replaces the two values at the top of the stack with their Bitwise XOR"
+    js= "xor()"
+    solidity = "xor()" />
+
+<MethodPartial 
+    description = "Replaces the value at the top of the stack with its Bitwise NOT"
+    js= "not()"
+    solidity = "not()" />
+
+<MethodPartial 
+    description = "Bitwise shifts the value at the top of the stack by `shift` bits to the left."
+    js= "shl(shift: BigNumberish)"
+    solidity = "shl(uint8 shift)" />
+
+<MethodPartial 
+    description = "Bitwise shifts the value at the top of the stack by `shift` bits to the right."
+    js= "shr(shift: BigNumberish)"
+    solidity = "shr(uint8 shift)" />
+
+
+### Comparison Operations
+<i>These commands perform comparison operations on stack data.</i>
+
+<MethodPartial 
+    description = "Replaces the value at the top of the stack with a boolean indicating if it is zero."
+    js= "isZero()"
+    solidity = "isZero()" />
+
+<MethodPartial 
+    description = "Replaces the top two items on the stack with a boolean indicating if they are equal."
+    js= "eq()"
+    solidity = "eq()" />
+
+<MethodPartial 
+    description = "Replaces the top two items on the stack with a boolean indicating if they are not equal."
+    js= "neq()"
+    solidity = "neq()" />
+
+<MethodPartial 
+    description = "Replaces the top two items on the stack with a boolean indicating of the value at HEAD-1 is greater than the value at the HEAD."
+    js= "gt()"
+    solidity = "gt()" />
+
+<MethodPartial 
+    description = "Replaces the top two items on the stack with a boolean indicating of the value at HEAD-1 is less than the value at the HEAD."
+    js= "lt()"
+    solidity = "lt()" />
+
+<MethodPartial 
+    description = "Replaces the top two items on the stack with a boolean indicating of the value at HEAD-1 is less than or equal the value at the HEAD."
+    js= "lte()"
+    solidity = "lte()" />
+
+<MethodPartial 
+    description = "Replaces the top two items on the stack with a boolean indicating of the value at HEAD-1 is greater than or equal to the value at the HEAD."
+    js= "gte()"
+    solidity = "gte()" />
+
+<MethodPartial 
+    description = "Duplicate the top two items on the stack."
+    js= "dup2()"
+    solidity = "dup2()" />
+
+<MethodPartial 
+    description = "Puts the minimum value out of the last two values on the stack at the HEAD."
+    js= "min()"
+    solidity = "min()" />
+
+<MethodPartial 
+    description = "Puts the maximum value out of the last two values on the stack at the HEAD."
+    js= "max()"
+    solidity = "max()" />
+
+### Debug
+<i>These commands aid in debugging your requests.</i>
+
+<MethodPartial 
+    description = "Used for debugging. Outputs the machine state to the console. Available only in JavaScript."
+    js= "debug(label = '')"
+    solidity = {null} />

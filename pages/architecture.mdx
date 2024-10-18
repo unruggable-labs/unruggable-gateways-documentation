@@ -1,47 +1,51 @@
 # Architecture
 
-The [Unruggable Gateways codebase](https://github.com/unruggable-labs/unruggable-gateways/) includes both a [Typescript](https://github.com/unruggable-labs/unruggable-gateways/tree/main/src/vm.ts) and a [Solidity](https://github.com/unruggable-labs/unruggable-gateways/tree/main/contracts/GatewayProver.sol) version of the virtual machine. The idea is simple: write your code in Typescript to read data from your chosen Layer 2 (L2) network, then easily convert it to Solidity and deploy it without changes.
+The [Unruggable Gateways codebase](https://github.com/unruggable-labs/unruggable-gateways/) includes both a [Typescript](https://github.com/unruggable-labs/unruggable-gateways/tree/main/src/vm.ts) and a [Solidity](https://github.com/unruggable-labs/unruggable-gateways/tree/main/contracts/GatewayVM.sol) version of the virtual machine. The idea is simple: write your code in Typescript to read data from your chosen Layer 2 (L2) network, then easily convert it to Solidity and deploy it without changes.
 
 ## How It Works (High-Level Overview)
 
-1.	**Contract Definition**: A contract defines an `GatewayRequest`. This request is passed to the fetch method defined in `GatewayFetchTarget.sol`.
+1.	**Your Contract**: builds a `GatewayRequest` that is passed to our [`fetch`](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayFetchTarget.sol#L25) method defined in [`GatewayFetchTarget.sol`](https://github.com/unruggable-labs/unruggable-gateways/blob/main/contracts/GatewayFetchTarget.sol).
 2.	**Offchain Data Handling**: The fetch method uses the [ERC-3668](https://eips.ethereum.org/EIPS/eip-3668) standard and reverts with an `OffchainLookup`, instructing the client to query the Gateway.
-3.	**Response Processing**: The `fetchCallback` method processes the response, using a chain-specific "Verifier" to validate proofs and return the results to the caller.
+3.	**Response Processing**: The [`fetchCallback`](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayFetchTarget.sol#L51) method processes the response, using a chain-specific [*Verifier*](/verifier-deployments) to validate proofs and return the results to the caller.
 
 ## Core Components
 
 ### 1. Request Builder
 
-- `GatewayFetcher.sol` provides a [public API](/op-code-reference) for creating an `GatewayRequest`. This request consists of a series of operations that the virtual machine interprets to read and process data from other rollups.
+- [`GatewayFetcher.sol`](https://github.com/unruggable-labs/unruggable-gateways/blob/main/contracts/GatewayFetcher.sol) provides a [public API](/builder-api-methods) for building a `GatewayRequest`. This request consists of a series of operations that the virtual machine interprets to read and process data from other rollups.
 - Solidity developers can write contracts that build these requests by inheriting from `GatewayFetchTarget.sol`.
 - A Typescript version is also available for easier development and testing. You can check out our [Examples](/examples) page for more details.
 
 ### 2. The Gateway
 
-- The `gateway.ts` Typescript file sets up a simple HTTP server to handle requests for data from other rollups. It uses a “Rollup” as a parameter (explained below).
+- The [`gateway.ts`](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/src/gateway.ts#L43) Typescript file sets up a simple HTTP server to handle requests for data from other rollups. It uses a *Rollup* instance as a parameter (explained below).
 - The gateway connects to the necessary rollup to gather data, create proofs, and send them back to the client, so users don’t have to interact directly with the rollups.
 
 ### 3. The Rollup
 
-- Rollup classes in Typescript use “Prover” and “Commit” generics to instruct the Gateway on how to request data and create verifiable proofs.
-- They have methods (`encodeWitness` and `encodeWitnessV1`) that explain how to encode proof data from the gateway in a way that is understood by the "Verifier".
+- Rollup classes (e.g. [`OPFaultRollup`](https://github.com/unruggable-labs/unruggable-gateways/blob/main/src/op/OPFaultRollup.ts)) instruct the Gateway on how to request data and create verifiable proofs for that specific chain.
+- They have methods (`encodeWitness` and `encodeWitnessV1`) that appropriately encode proof data fetched by the gateway in a way that is understood by the chain specific *Verifier*.
 
 
 #### Commits
 
-- Commits represent the data submitted to Layer 1 (L1) by the L2 chain. They are necessary to verify a proof or extract the right data to check against a proof.
-- The `rollup.ts` base class defines methods to help the gateway fetch commit data (`fetchLatestCommitIndex` and `fetchCommit`).
+- A *Commit* represents the data submitted to Layer 1 (L1) by the L2 chain. It contains the data necessary to verify a proof returned by the *Gateway*.
+- The chain specific rollup classes implement abstract methods (`fetchLatestCommitIndex` and `fetchCommit`) to help the *Gateway* fetch data/proofs for for the commit requested by the user.
 
 
 ### 4. Verifiers
 
-- A Verifier is a Solidity contract deployed on L1. It is used by the ERC 3668 callback to verify the data sent from the gateway server.
-- Different chains utilize different hashing functions and Trie structures. Verifiers use different verification steps based on the rollup. Helper contracts are used include `EthTrieHooks.sol` and `LineaTrieHooks.sol`.
+- A *Verifier* is a Solidity contract deployed on L1. It is used by the ERC-3668 callback to verify the proofs returned by the *Gateway*.
+- Different chains utilize different hashing functions and Trie structures. Verifiers use different verification steps based on the rollup.
+
+#### Verifier Hooks
+- Verifier Hook contracts implement the `verifyAccountState`, and `verifyStorageValue` interface ([`IVerifierHooks`](https://github.com/unruggable-labs/unruggable-gateways/blob/main/contracts/IVerifierHooks.sol)) methods to specify how account and storage proofs should be used to verify state for specific Trie structures.
 
 #### Gateway URL
 
 - The Verifier specifies the URLs of the Gateways to query for handling a request via the `gatewayURLs()` method.
+- The user can operate their own gateway and overwrite the gateways used to handle their request.
 
 #### Context
 
-- Each Verifier implements the `getLatestContext` method from the `IVerifier` interface. This method determines what L2 chain state the request can access. The gateway considers this context when responding and includes it in its response.
+- Each Verifier implements the `getLatestContext` method from the [`IGatewayVerifier`](https://github.com/unruggable-labs/unruggable-gateways/blob/main/contracts/IGatewayVerifier.sol) interface. This method determines what L2 chain state the request can access. The gateway considers this context when responding and includes it in its response.

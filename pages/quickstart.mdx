@@ -51,13 +51,25 @@ contract L2DataContract {
 }
 ```
 
-- Replace `CHAIN-IDENTIFIER` the the appropriate Alchemy subdomain for the L2 rollup you want to deploy to.
+- Replace `YOUR-RPC-URL` with the RPC url for the L2 rollup you want to deploy to.
 - Replace `YOUR-API-KEY` with your Alchemy API key.
 - Replace `YOUR-PRIVATE-KEY` with your deployment private key.
 - Run the command.
 
 ```bash
-forge create --rpc-url https://CHAIN-IDENTIFIER.g.alchemy.com/v2/YOUR-API-KEY --private-key YOUR-PRIVATE-KEY contracts/L2DataContract.sol:L2DataContract
+forge create --rpc-url YOUR-RPC-URL --private-key YOUR-PRIVATE-KEY contracts/L2DataContract.sol:L2DataContract
+```
+
+You should get an output similar to the below:
+
+```bash
+[⠊] Compiling...
+[⠒] Compiling 1 files with Solc 0.8.25
+[⠢] Solc 0.8.25 finished in 25.56ms
+Compiler run successful!
+Deployer: 0x31A74F3862193636120158D71860cA72bAf7A8cA
+Deployed to: 0xbf6d2C96547Bb015961cb38D30596a781C7039e1
+Transaction hash: 0x734bcee537c67bb4af120189ebdb90afebcdf1422568987a09546a55092808fc
 ```
 
 ## 3. Deploy a resolver to L1
@@ -70,29 +82,27 @@ forge create --rpc-url https://CHAIN-IDENTIFIER.g.alchemy.com/v2/YOUR-API-KEY --
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
  
-import  "@unruggable/contracts/GatewayProtocol.sol";
 import {GatewayFetcher, GatewayRequest} from "@unruggable/contracts/GatewayFetcher.sol";
-import {GatewayFetchTarget, IGatewayProofVerifier} from "@unruggable/contracts/GatewayFetchTarget.sol";
-
-import "forge-std/console2.sol"; // DEBUG
-
+import {GatewayFetchTarget} from "@unruggable/contracts/GatewayFetchTarget.sol";
+import {IGatewayVerifier} from "@unruggable/contracts/IGatewayVerifier.sol";
+  
 contract L1SimpleResolver is GatewayFetchTarget {
 	using GatewayFetcher for GatewayRequest;
-
-	IGatewayProofVerifier immutable _verifier;
+ 
+	IGatewayVerifier immutable _verifier;
 	address immutable _exampleAddress;
-
-	constructor(IGatewayProofVerifier verifier, address exampleAddress) {
+ 
+	constructor(IGatewayVerifier verifier, address exampleAddress) {
 		_verifier = verifier;
         _exampleAddress = exampleAddress;
 	}
-
+ 
     function supportsInterface(bytes4 x) external pure returns (bool) {
 		return x == 0x3b3b57de; //See https://docs.ens.domains/ensip/1
 	}
-
+ 
     function addr(bytes32 node) public view returns (address) {
-
+ 
         GatewayRequest memory r = GatewayFetcher
             .newRequest(1)
             .setTarget(_exampleAddress)
@@ -100,8 +110,8 @@ contract L1SimpleResolver is GatewayFetchTarget {
             .read()
             .debug("lol")
             .setOutput(0);
-
-		fetch(_verifier, r, this.addrCallback.selector, '');    
+ 
+		fetch(_verifier, r, this.addrCallback.selector);    
 	}
 	
     function addrCallback(bytes[] calldata values, uint8, bytes calldata extraData) external pure returns (address) {
@@ -109,32 +119,59 @@ contract L1SimpleResolver is GatewayFetchTarget {
 	}
 }
 ```
-
+- Replace `YOUR-L1-RPC-URL` with the RPC URL for your *Layer 1* node.
 - Replace `VERIFIER-ADDRESS` with the verifier address for your chosen L2. This can be found [here](/verifier-deployments).
 - Replace `THE-ADDRESS-OF-THE-CONTRACT-YOU-DEPLOYED-IN-THE-LAST-STEP` with.. you guessed it ;)
 - Run the command.
 
 ```bash
-forge create --rpc-url https://eth-mainnet.g.alchemy.com/v2/YOUR-API-KEY --private-key YOUR-PRIVATE-KEY contracts/L1SimpleResolver.sol:L1SimpleResolver --constructor-args VERIFIER-ADDRESS THE-ADDRESS-OF-THE-CONTRACT-YOU-DEPLOYED-IN-THE-LAST-STEP
+forge create --rpc-url YOUR-L1-RPC-URL --private-key YOUR-PRIVATE-KEY contracts/L1SimpleResolver.sol:L1SimpleResolver --constructor-args VERIFIER-ADDRESS THE-ADDRESS-OF-THE-CONTRACT-YOU-DEPLOYED-IN-THE-LAST-STEP
+```
+
+You should get an output similar to the below:
+
+```
+[⠊] Compiling...
+No files changed, compilation skipped
+Deployer: 0x31A74F3862193636120158D71860cA72bAf7A8cA
+Deployed to: 0x356A1bFBF8F5cDc6e7755D4d90D7E67Eeb12ad73
+Transaction hash: 0xc021acd611aa2a5b8c4a530bc9bc85393bd3b9c6878c13cb3ab2ce88181a0668
 ```
 
 ## 4. Set your resolver
 
 Set the resolver for your ENS name to the address of the deployed L1 Resolver.
 
-You can do this through the [ENS App](https://app.ens.domains/) 
+You can do this through the [ENS App](https://app.ens.domains/). 
+
+**Note:** Make sure you are connected to the correct network (Mainnet, Sepolia, or Holesky). 
 
 ![Update resolver using the ENS App](/images/docs/update-resolver-ens-app.png)
 
-Alternatively you can use the following command having replaced the placeholders.
+Alternatively you can use the following command.
+
+**Note: ** This assumes that your name is **not wrapped**.
+
+- `0x00000000000C2E074eC69A0dFb2997BA6C7d2e1ez` is the [ENS Registry address](https://docs.ens.domains/learn/deployments) on Mainnet, Sepolia, and Holesky.
+- Replace `MY-ENS-NAME` with your ENS name e.g. `unruggable.eth`
+- Replace `RESOLVER-ADDRESS` with the address of the resolver you deployed in the last step.
+- Replace `YOUR-PRIVATE-KEY` with your accounts private key
+- Replace `YOUR-L1-RPC-URL` with the RPC URL for your *Layer 1* node.
+
 
 ```bash
-cast send 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e "setResolver(bytes32,address)" $(cast namehash "MY-ENS-NAME") RESOLVER-ADDRESS --private-key YOUR-PRIVATE-KEY --rpc-url https://eth-mainnet.g.alchemy.com/v2/YOUR-API-KEY
+cast send 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e "setResolver(bytes32,address)" $(cast namehash "MY-ENS-NAME") RESOLVER-ADDRESS --private-key YOUR-PRIVATE-KEY --rpc-url YOUR-L1-RPC-URL
 ```
 
 ## 5. Verify
 
 - Verify that your name resolves as expected.
+
+This easiest way to do this is to view your names profile on the ENS App:
+
+```
+https://app.ens.domains/YOUR-NAME-HERE.eth
+```
 
 <div class = "warning mt-20">
 	<p>**!!** The finalization times for rollup state varies on a chain by chain basis.</p> 
