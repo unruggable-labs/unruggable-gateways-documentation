@@ -9,6 +9,11 @@
   padding: 10px;
 }
 
+.yellow {
+  background: rgb(255, 245, 238);
+  padding: 10px;
+}
+
 .mt-20 {
   margin-top: 20px;
 }
