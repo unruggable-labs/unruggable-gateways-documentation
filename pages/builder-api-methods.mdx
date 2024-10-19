@@ -94,23 +94,31 @@ Internally these methods utilize [OP codes](https://github.com/unruggable-labs/u
 
 ### Nested Requests
 <i>These commands allow you to evaluate nested requests.</i>
+<p><strong>!!</strong> Advanced functionality - more documentation coming.</p>
+
 
 <MethodPartial 
-    description = ""
+    description = "Will evaluate an encoded request that has been pushed onto the HEAD of the stack."
     js= "eval()"
     solidity = "eval()" />
 
 <MethodPartial 
-    description = ""
+    description = {(<>Will evaluate an encoded request that has been pushed onto the HEAD of the stack <strong>IF</strong> the previous operation resolves to <strong>true</strong>.</>)}
     js= "evalIf()"
     solidity = "evalIf()" />
 
 <MethodPartial 
-    description = ""
+    description = {(<>Will evaluate an encoded request that has been pushed onto the HEAD of the stack against the specified number of items on the stack.<br /><br />Execution results are conditional on passed flags which in Javascript are passed as booleans on object properties, whilst in Solidity they are passed as a uint8.</>)}
     js= "evalLoop(opts: 
     {success?: boolean; failure?: boolean; acquire?: boolean; keep?: boolean; count?: number;} = {})"
-    solidity = "evalLoop(uint8 flags)" />
+    solidity = "evalLoop(uint8 flags)/evalLoop(uint8 flags,uint256 count)" />
 
+The available evaluation flags are enumerated here: [Typescript](https://github.com/unruggable-labs/unruggable-gateways/blob/dc46be31eccfa9ec591aa1c409c8df1ba6c82d82/src/vm.ts#L39) and [Solidity](https://github.com/unruggable-labs/unruggable-gateways/blob/dc46be31eccfa9ec591aa1c409c8df1ba6c82d82/contracts/GatewayRequest.sol#L8). They are: 
+
+- `STOP_ON_SUCCESS`
+- `STOP_ON_FAILURE`
+- `ACQUIRE_STATE`
+- `KEEP_ARGS`
 
 ### Exiting
 <i>These commands handle assertions, requirements, and graceful request exits.</i>

@@ -1,10 +1,10 @@
 // components/MethodPartial.js
 const MethodPartial = ({ description, js, solidity }) => {
   return (
-    <table style={{ padding: '10px', border: '1px solid #ccc', marginTop: '20px', width: '100%' }}>
+    <table class="method">
       <tbody>
         <tr>
-          <td colSpan={2} style = {{padding:'10px', background: '#FFF5EE', borderBottom: '1px'}}>{description}</td>
+          <td colSpan={2} className="description">{description}</td>
         </tr>
         <tr>
           <th className = "nx-m-0 nx-border nx-border-gray-300 nx-px-4 nx-py-2 nx-font-semibold dark:nx-border-gray-600">Javascript</th>

@@ -1,9 +1,17 @@
 # Reading a mapping
 
+The [solidity storage layout documentation](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html) states that the *"value corresponding to a mapping key k is located at keccak256(h(k) . p) where . is concatenation and h is a function that is applied to the key depending on its type"*
+
+Our virtual machine abstracts away this complexity and manages calculating and updating the internal slot pointer such that data can be read.
+
 ## Contract definition
 
 ```solidity filename="Example.sol"
-    contract X {
+
+    // SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.25;
+
+    contract Example {
         mapping(uint256=>string) exampleMapping;          
 
         constructor() {
@@ -24,9 +32,9 @@ The value at index `42` can be read as follows:
 
     new GatewayRequest(OUTPUT_COUNT)    //Specify the number of outputs
         .setTarget(CONTRACT_ADDRESS)    //Specify the contract address
-        .setSlot(0)                     //Specify the slot number
-        .push(MAPPING_KEY)              //Push the key onto the stack
-        .follow()                       //Follow that key 
-        .readBytes()                    //Read the bytes
+        .setSlot(0)                     //Specify the base slot number
+        .push(MAPPING_KEY)              //Specify the mapping key you want to read
+        .follow()                       //Update the VM internal slot pointer to point to that key 
+        .readBytes()                    //Read the value
         .setOutput(0)                   //Set it at output index 0
 ```

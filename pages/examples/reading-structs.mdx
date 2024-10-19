@@ -2,10 +2,15 @@
 
 The [solidity storage layout documentation](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html) outlines that *"The elements of structs and arrays are stored after each other, just as if they were given as individual values."*
 
+As such, once the slot pointer points to the root of a struct, we can view contiguous items by simply incrementing the slot pointer. The [Builder API](/builder-api-methods) exposes methods to do this (`addSlot`).
+
 ## Contract definition
 
 ```solidity filename="Example.sol"
-    contract X {
+    // SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.25;
+
+    contract Example {
         struct Item {
             uint256 index;
             string name;
@@ -30,9 +35,9 @@ Can have the `name` value of its constructed struct accessed as follows:
 
     new GatewayRequest(OUTPUT_COUNT)    //Specify the number of outputs
       .setTarget(CONTRACT_ADDRESS)      //Specify the contract address
-      .setSlot(0)                       //Specify the slot number
-      .push(1)                          //Push the value 1 onto the stack
-      .addSlot()                        //Increment the slot ID (by popping 1 from the stack)
+      .setSlot(0)                       //Specify the base slot number
+      .push(1)                          //Pass the value 1 to the Virtual Machine
+      .addSlot()                        //This increments the slot ID by the last passed values
       .readBytes()                      //Read the bytes
       .setOutput(0);                    //Set it at output index 0
 ```
