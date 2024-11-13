@@ -1,38 +1,56 @@
 import { shortenAddress } from '../helpers/helpers'
+import ResolveName from '../components/ResolveName'
+import { Tabs } from 'nextra/components'
 
 # Verifier Deployments
 
-Verifiers are currently deployed on the **Sepolia Ethereum testnet**.
+Verifiers are currently deployed on **Ethereum Mainnet** and the **Sepolia Ethereum testnet**.
 
-## Current Sepolia Deployments
+<Tabs items={['Mainnet', 'Sepolia']}>
+  <Tabs.Tab>
+  		## Current Mainnet Deployments
 
-The current deployments for our verifiers can be found at the following addresses on the **Sepolia testnet**:
+		The current deployments for our verifiers can be found at the following addresses on the **Ethereum Mainnet**:
 
-| Chain | Address | Gateway |
-|-------|---|---|
-| Arbitrum One Sepolia | [{shortenAddress("0x9133D1A6409b25546147229E102DFa439048028F")}](https://sepolia.etherscan.io/address/0x9133D1A6409b25546147229E102DFa439048028F#code)|[https://arbitrum-sepolia.gateway.unruggable.com](https://arbitrum-sepolia.gateway.unruggable.com)|
-| Base Sepolia | [{shortenAddress("0x408F25EEF5f8Da213Ce9D2F5b2063f14813067A2")}](https://sepolia.etherscan.io/address/0x408F25EEF5f8Da213Ce9D2F5b2063f14813067A2#code)|[https://base-sepolia.gateway.unruggable.com](https://base-sepolia.gateway.unruggable.com)| 
-| Optimism Sepolia | [{shortenAddress("0x74F55F0af743f9CA5db0202fc81f589c5fDf99D4")}](https://sepolia.etherscan.io/address/0x74F55F0af743f9CA5db0202fc81f589c5fDf99D4#code)|[https://optimism-sepolia.gateway.unruggable.com](https://optimism-sepolia.gateway.unruggable.com)|
-| Linea Sepolia | [{shortenAddress("0x6AD2BbEE28e780717dF146F59c2213E0EB9CA573")}](https://sepolia.etherscan.io/address/0x6AD2BbEE28e780717dF146F59c2213E0EB9CA573#code)|[https://linea-sepolia.gateway.unruggable.com](https://linea-sepolia.gateway.unruggable.com)|
-| Scroll Sepolia | [{shortenAddress("0xd6eaADB25D5145c3b0407341292720Efd798a51f")}](https://sepolia.etherscan.io/address/0xd6eaADB25D5145c3b0407341292720Efd798a51f#code)|[https://scroll-sepolia.gateway.unruggable.com](https://scroll-sepolia.gateway.unruggable.com)|
-| Self Sepolia | [{shortenAddress("0xBAb69B0B5241c0be99282d531b9c53d7c966864F")}](https://sepolia.etherscan.io/address/0xBAb69B0B5241c0be99282d531b9c53d7c966864F#code)|[https://self-sepolia.gateway.unruggable.com](https://self-sepolia.gateway.unruggable.com)|
+		| Chain         | Address                                                         | Gateway                                                         |
+		|---------------|-----------------------------------------------------------------|-----------------------------------------------------------------|
+		| Arbitrum One  | {<ResolveName name="scroll.verifier.unruggable.eth" network="mainnet"/>} | [https://arbitrum.gateway.unruggable.com](https://arbitrum.gateway.unruggable.com) |
+		| Base          | {<ResolveName name="base.verifier.unruggable.eth" network="mainnet"/>}    | [https://base.gateway.unruggable.com](https://base.gateway.unruggable.com) |
+		| Optimism      | {<ResolveName name="optimism.verifier.unruggable.eth" network="mainnet"/>} | [https://optimism.gateway.unruggable.com](https://optimism.gateway.unruggable.com) |
+		| Linea         | {<ResolveName name="linea.verifier.unruggable.eth" network="mainnet"/>}   | [https://linea.gateway.unruggable.com](https://linea.gateway.unruggable.com) |
+		| Scroll        | {<ResolveName name="scroll.verifier.unruggable.eth" network="mainnet"/>}  | [https://scroll.gateway.unruggable.com](https://scroll.gateway.unruggable.com) |
+  </Tabs.Tab>
 
-<div class = "info mt-20">
-	<p>**EthGlobal participants..** We recommend that you test your solutions using the **Sepolia *Self Verifier*** which allows for instantaneous verification of **any** contract state on Sepolia using a verifier **also deployed on Sepolia**.</p> 
-</div>
+	<Tabs.Tab>
+		## Current Sepolia Deployments
+
+		The current deployments for our verifiers can be found at the following addresses on the **Sepolia testnet**:
+
+		| Chain         | Address                                                         | Gateway                                                         |
+		|---------------|-----------------------------------------------------------------|-----------------------------------------------------------------|
+		| Arbitrum One Sepolia  | {<ResolveName name="arbitrum-sepolia.verifier.unruggable.eth" network="sepolia"/>} | [https://arbitrum-sepolia.gateway.unruggable.com](https://arbitrum-sepolia.gateway.unruggable.com) |
+		| Base Sepolia          | {<ResolveName name="base-sepolia.verifier.unruggable.eth" network="sepolia"/>}    | [https://base-sepolia.gateway.unruggable.com](https://base-sepolia.gateway.unruggable.com) |
+		| Optimism Sepolia     | {<ResolveName name="optimism-sepolia.verifier.unruggable.eth" network="sepolia"/>} | [https://optimism-sepolia.gateway.unruggable.com](https://optimism-sepolia.gateway.unruggable.com) |
+		| Linea Sepolia         | {<ResolveName name="linea-sepolia.verifier.unruggable.eth" network="sepolia"/>}   | [https://linea-sepolia.gateway.unruggable.com](https://linea-sepolia.gateway.unruggable.com) |
+		| Scroll Sepolia        | {<ResolveName name="scroll-sepolia.verifier.unruggable.eth" network="sepolia"/>}  | [https://scroll-sepolia.gateway.unruggable.com](https://scroll-sepolia.gateway.unruggable.com) |
+		| Self Sepolia          | {<ResolveName name="self-sepolia.verifier.unruggable.eth" network="sepolia"/>}    | [https://self-sepolia.gateway.unruggable.com](https://self-sepolia.gateway.unruggable.com) |
 
 
-### Relevant Rollup
 
-The contracts listed below are the relevant contracts on **Sepolia** where the respective chains make proposals as to their state.
+		<div class = "info mt-20">
+			<p>**EthGlobal participants..** We recommend that you test your solutions using the **Sepolia *Self Verifier*** which allows for instantaneous verification of **any** contract state on Sepolia using a verifier **also deployed on Sepolia**.</p> 
+		</div>
+	</Tabs.Tab>
+</Tabs>
 
-This is provided as a reference. The Sepolia verifiers will accept **any** posted root for these chains.
+## Rollup Contract Addresses
+
+Theses links outline the deployment addresses of the smart contracts related to rollup operation in the context of each supported chain.
 
 | Chain | Relevant Contract |
 |-------|---|
-| Arbitrum One Sepolia | [RollupProxy (proxy)](https://sepolia.etherscan.io/address/0xd80810638dbDF9081b72C1B33c65375e807281C8) |
-| Base Sepolia | [DisputeGameFactory (proxy)](https://sepolia.etherscan.io/address/0xd6E6dBf4F7EA0ac412fD8b65ED297e64BB7a06E1) |
-| Optimism Sepolia | [DisputeGameFactory (proxy)](https://sepolia.etherscan.io/address/0x05F9613aDB30026FFd634f38e5C4dFd30a197Fa1) |
-| Linea Sepolia | [LineaRollup (proxy)](https://sepolia.etherscan.io/address/0xB218f8A4Bc926cF1cA7b3423c154a0D627Bdb7E5)|
-| Scroll Sepolia | [ScrollChainMockFinalize (proxy)](https://sepolia.etherscan.io/address/0x2D567EcE699Eabe5afCd141eDB7A4f2D0D6ce8a0)|
-| Self Sepolia | - |
+| Arbitrum One | [https://docs.arbitrum.io/for-devs/dev-tools-and-resources/chain-info](https://docs.arbitrum.io/for-devs/dev-tools-and-resources/chain-info) |
+| Base | [https://docs.base.org/docs/base-contracts/](https://docs.base.org/docs/base-contracts/) |
+| Optimism | [https://docs.optimism.io/chain/addresses](https://docs.optimism.io/chain/addresses) |
+| Linea | [https://docs.linea.build/developers/quickstart/info-contracts](https://docs.linea.build/developers/quickstart/info-contracts)|
+| Scroll | [https://docs.scroll.io/en/developers/scroll-contracts/](https://docs.scroll.io/en/developers/scroll-contracts/)|
