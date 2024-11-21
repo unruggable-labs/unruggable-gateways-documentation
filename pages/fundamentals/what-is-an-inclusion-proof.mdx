@@ -1,20 +1,16 @@
-### What is an Inclusion Proof?
+# What is an Inclusion Proof?
 
 An inclusion proof, also known as a Merkle proof or Merkle inclusion proof, is a cryptographic proof that shows a specific data element (like a transaction or a piece of data in storage) is part of a larger dataset, usually represented as a Merkle tree.
 
-#### How It Works
+Data elements are arranged in a hierarchical structure called a Merkle tree (or hash tree). Each leaf node in the tree contains a hash of a data element and hashes of adjacent leaf nodes are hashed together to create parent nodes. This process continues up the tree until a single root hash, known as the Merkle root, is calculated. 
 
-1. **Merkle Tree Structure**:  
-   Data elements are arranged in a hierarchical structure called a Merkle tree (or hash tree). Each leaf node in the tree contains a hash of a data element.
+In the context of Ethereum a Merkle Trie is used for storing the account, transaction, and state data of the blockchain.
 
-2. **Calculation of Intermediate Nodes**:  
-   Hashes of adjacent leaf nodes are combined (hashed together) to create parent nodes. This process continues up the tree until a single root hash, known as the Merkle root, is calculated.
+## Proving
 
-3. **Inclusion Proof Components**:  
-   To prove that a specific data element is in the Merkle tree, an inclusion proof includes:
-   - The data element itself (or its hash).
-   - A series of hashes (nodes) that form the path from the leaf node (containing the data) to the tree’s root.
-   - Sibling nodes along this path that are needed to reconstruct the path to the root.
+To prove that a specific data element is in the Merkle tree, an inclusion proof includes:
+- The data element itself (or its hash).
+- A series of hashes (nodes) that form the path from the leaf node (containing the data) to the tree’s root.
+- Sibling nodes along this path that are needed to reconstruct the path to the root.
 
-4. **Verification**:  
-   With the inclusion proof, you can recreate the Merkle root by hashing the provided data element and its sibling nodes up to the root. If the computed root matches the known Merkle root (stored on-chain or verified), it confirms that the data element is part of the original dataset in the Merkle tree.
+With the inclusion proof, you can recreate the Merkle root by hashing the provided data element and its sibling nodes up to the root. If the computed root matches the known Merkle root (stored on-chain or verified), it confirms that the data element is part of the original dataset in the Merkle tree.

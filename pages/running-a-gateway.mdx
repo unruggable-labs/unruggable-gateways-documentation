@@ -32,8 +32,32 @@ ANKR_KEY
 
 ## Run it
 
-* `bun run serve <chain> [port]`
-	* Chains: `arb1` `base-testnet` `base` `blast` `celo-alfajores` `cyber` `fraxtal` `lineaV1` `linea` `mantle` `mode` `op` `opbnb` `polygon` `redstone` `reverse-op` `scroll` `self-eth` `self-holesky` `self-sepolia` `shape` `taiko` `zksync` `zora`
-	* Default port: `8000`
+* `bun run serve <chain-identifier> [port]`
 
-The latest chain identifiers can be seen in the [source code](https://github.com/unruggable-labs/unruggable-gateways/blob/main/scripts/serve.ts).
+### Chain Identifiers
+
+`ape` `arb1-sepolia` `arb1` `base-sepolia` `base` `blast` `celo-alfajores` `cyber` `fraxtal` `ink-sepolia` `linea-sepolia` `lineaV1` `linea` `mantle` `mode` `op-sepolia` `op` `opbnb` `polygon` `redstone` `reverse-op` `scroll-sepolia` `scroll` `self-eth` `self-holesky` `self-sepolia` `shape` `soneium-minato` `taiko-hekla` `taiko` `unichain-sepolia` `zero-sepolia` `zero` `zksync-sepolia` `zksync` `zora`
+
+The latest chain identifiers can be seen in the [source code](https://github.com/unruggable-labs/unruggable-gateways/blob/main/scripts/serve.ts) or by running the following command:
+
+```
+bun run test/debug/serve-list.ts
+```
+
+### Default port
+
+`8000`
+
+### Configuration options
+
+- `--prefetch` Periodically pulls the latest commit to keep the cache fresh.
+- `--latest`
+- `--unfinalized` For supported gateways indicates that state roots need not be finalized to be proven against.
+- `--dump` Dumps gateway configuration and latest commit data before exiting.
+- `--debug` Prints debug output from the Prover.
+
+You can also pass a private key to sign response data when utilizing a `TrustedVerifier`. For example:
+
+```
+bun run serve —-latest --debug SIGNING_KEY_HERE trusted:op
+```

@@ -1,14 +1,13 @@
 {
   "index": "Introduction",
-  "devcon-links": "Devcon Links",
-  "quickstart": "Quick(ish)start",
+  "quickstart": "Quickstart",
   "architecture": "Architecture",
-  "virtual-machine": "Virtual Machine",
-  "builder-api-methods": "Builder API Methods",
-  "verifier-deployments": "Verifier deployments",
+  "verifiers": "Verifiers",
+  "gateways": "Gateways",
   "fundamentals": "Fundamentals",
   "chains": "Chain support",
   "examples": "Examples",
+  "videos": "Videos",
   "running-a-gateway": "Running a gateway",
   "contributing": "Contributing",
   "github_link": {

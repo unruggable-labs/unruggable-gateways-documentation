@@ -1,0 +1,72 @@
+# TrustedVerifier Quickstart
+
+This quickstart outlines how to get started using a `TrustedVerifier`.
+
+A `TrustedVerifier` allows for verification of signed data from other blockchains **as opposed to using proofs**.
+
+This means that you can validate that your requests work as expected during the development process in advance of deploying your contracts with **real** verifiers.
+
+For further details please see [Verifiers > Development](/verifiers/development).
+
+## 1. Run a trusted gateway
+
+Replace `op` in `trusted:op` with the appropriate chain identifier.
+
+```bash
+git clone https://github.com/unruggable-labs/unruggable-gateways.git
+bun run serve —-latest —-debug trusted:op
+```
+
+Further information about running a gateway can be found [here](/running-a-gateway).
+
+## 2. Create a repo and install dependencies
+
+```bash
+bun i @unruggable/gateways
+bun i @adraffy/blocksmith
+```
+
+## 3. Write your contract code
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.23;
+
+import "@unruggable/gateways/GatewayFetchTarget.sol";
+import "@unruggable/gateways/GatewayFetcher.sol";
+import {Ownable} from '@openzeppelin/access/Ownable.sol';
+
+contract ReaderContract is GatewayFetchTarget, Ownable {
+
+	using GatewayFetcher for GatewayRequest;
+	
+	IGatewayVerifier immutable _verifier;
+	address immutable _target;
+	
+	constructor(IGatewayVerifier verifier, address target) Ownable(msg.sender) {
+		_verifier = verifier;
+		_target = target;
+	}
+
+	function read() external view returns (uint256) {
+
+		GatewayRequest memory req = GatewayFetcher.newRequest(1)
+            .setTarget(_target)
+            .setSlot(0)
+            .read()
+            .setOutput(0);
+
+		fetch(_verifier, req, this.readCallback.selector);
+	}
+
+	function readCallback(bytes[] memory values, uint8 /*exitCode*/, bytes memory /*carry*/) external pure returns (uint256) {
+        return abi.decode(values[0], (uint256));
+	}
+}
+```
+
+## 4. Deploy your contract
+
+Deploy your contract to a chain of your choice, passing the [deployment address](/verifiers/deployments) for the relevant `TrustedVerifier` and the address of the contract from which you are reading data.
+
+The example code above reads data from our `SlotDataContract`.

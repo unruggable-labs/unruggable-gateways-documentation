@@ -1,0 +1,29 @@
+# Development
+
+We have built a number of verifiers that allow for quick iteration during the development process. These are outlined below.
+
+Deployments for these verifiers on both mainnet and Sepolia can be found [here](/verifiers/deployments).
+
+## TrustedVerifier
+
+A `TrustedVerifier` verifies that data returned from a trusted gateway has been signed with the expected private key.
+
+Production use cases of Unruggable Gateways will likely utilise our chain specific gateways/verifiers that return/verify proofs of data stored on the respective L2 blockchain.
+
+The unlock of the `TrustedVerifier` is that it allows you to instantaneously verify data by relaxing trust assumptions slightly to trust a known secure signer.
+
+Utilising a `TrustedVerifier` allows for immediate verification of state without consideration for the finalization times associated with the rollup chain that you ultimately intend to deploy to. This means that you can quickly write your smart contract and test that it works as expected.
+
+Our [examples](/examples) section includes a link to a repository that demonstrates how you can build with a `TrustedVerifier`.
+
+## SelfVerifier
+
+A `SelfVerifier` is a verifier that is deployed on the same chain as the data contract from which you are reading. Again, it allows for verification of data without consideration for finalisation times.
+
+It works by verifying proofs of its own state against its own state root rather than against a state root posted to Layer 1 as part of another chains rollup process.
+
+State roots posted by a rollup are subject to a number of considerations, namely the cadence at which they are posted, and any fraud proofing/security mechanisms that influence whether we deem the state root trustworthy. By reducing dependency on these considerations by using a `SelfVerifier` we can quickly build out solutions as part of our development process.
+
+Eagle eyed readers will also note that the `SelfVerifier` has an additional interesting use case - it allows for you to read **any** data from **any** smart contract on the chain. This includes smart contract properties that do not have public visibility.
+
+

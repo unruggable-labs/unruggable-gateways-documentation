@@ -1,0 +1,60 @@
+import { shortenAddress } from '../../helpers/helpers'
+import ResolveName from '../../components/ResolveName'
+import { Tabs } from 'nextra/components'
+
+# Verifier Deployments
+
+Verifiers are currently deployed on **Ethereum Mainnet** and the **Sepolia Ethereum testnet**.
+
+See our [gateways](/gateways) page for details of the URLs of our Mainnet and Sepolia gateway network.
+
+<Tabs items={['Mainnet', 'Sepolia']}>
+  <Tabs.Tab>
+  		## Current Mainnet Deployments
+
+		The current deployments for our verifiers can be found at the following addresses on the **Ethereum Mainnet**:
+
+		| Chain         | Address                                                         |
+		|---------------|-----------------------------------------------------------------|
+		| Arbitrum One  | {<ResolveName name="arbitrum.verifier.unruggable.eth" network="mainnet"/>} |
+		| Base          | {<ResolveName name="base.verifier.unruggable.eth" network="mainnet"/>}    |
+		| Optimism      | {<ResolveName name="optimism.verifier.unruggable.eth" network="mainnet"/>} |
+		| Linea         | {<ResolveName name="linea.verifier.unruggable.eth" network="mainnet"/>}   |
+		| Scroll        | {<ResolveName name="scroll.verifier.unruggable.eth" network="mainnet"/>}  |
+		| Trusted       | {<ResolveName name="trusted.verifier.unruggable.eth" network="mainnet"/>}    |
+		| Self          | {<ResolveName name="self.verifier.unruggable.eth" network="mainnet"/>}    |
+  </Tabs.Tab>
+
+	<Tabs.Tab>
+		## Current Sepolia Deployments
+
+		The current deployments for our verifiers can be found at the following addresses on the **Sepolia testnet**:
+
+		| Chain         | Address                                                         |
+		|---------------|-----------------------------------------------------------------|
+		| Arbitrum One Sepolia  | {<ResolveName name="arbitrum-sepolia.verifier.unruggable.eth" network="sepolia"/>} |
+		| Base Sepolia          | {<ResolveName name="base-sepolia.verifier.unruggable.eth" network="sepolia"/>}    |
+		| Optimism Sepolia     | {<ResolveName name="optimism-sepolia.verifier.unruggable.eth" network="sepolia"/>} |
+		| Linea Sepolia         | {<ResolveName name="linea-sepolia.verifier.unruggable.eth" network="sepolia"/>}   |
+		| Scroll Sepolia        | {<ResolveName name="scroll-sepolia.verifier.unruggable.eth" network="sepolia"/>}  |
+		| Trusted Sepolia          | {<ResolveName name="trusted-sepolia.verifier.unruggable.eth" network="sepolia"/>}    |
+		| Self Sepolia          | {<ResolveName name="self-sepolia.verifier.unruggable.eth" network="sepolia"/>}    |
+	</Tabs.Tab>
+</Tabs>
+
+## Rollup Contract Addresses
+
+Theses links outline the deployment addresses of the smart contracts related to rollup operation in the context of each supported chain.
+
+| Chain | Relevant Contract |
+|-------|---|
+| Arbitrum One | [https://docs.arbitrum.io/for-devs/dev-tools-and-resources/chain-info](https://docs.arbitrum.io/for-devs/dev-tools-and-resources/chain-info) |
+| Base | [https://docs.base.org/docs/base-contracts/](https://docs.base.org/docs/base-contracts/) |
+| Optimism | [https://docs.optimism.io/chain/addresses](https://docs.optimism.io/chain/addresses) |
+| Linea | [https://docs.linea.build/developers/quickstart/info-contracts](https://docs.linea.build/developers/quickstart/info-contracts)|
+| Scroll | [https://docs.scroll.io/en/developers/scroll-contracts/](https://docs.scroll.io/en/developers/scroll-contracts/)|
+
+
+### Notes 
+
+When developing we reccomend that you utilize our `TrustedVerifier` or our `SelfVerifier` alongside the relevant [gateway](/gateways) so as to allow instant verification of data without consideration for finalization times. For more information please see [here](/verifiers/development).

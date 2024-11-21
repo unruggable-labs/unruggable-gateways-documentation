@@ -1,0 +1,43 @@
+import { shortenAddress } from '../helpers/helpers'
+import ResolveName from '../components/ResolveName'
+import { Tabs } from 'nextra/components'
+
+# Live Gateways
+
+Gateways are currently operational for **Ethereum Mainnet** and the **Sepolia Ethereum testnet**.
+
+<Tabs items={['Mainnet', 'Sepolia']}>
+  <Tabs.Tab>
+  		## Mainnet Gateways
+		| Chain         | Gateway                                                         |
+		|---------------|-----------------------------------------------------------------|
+		| Arbitrum One  | [https://arbitrum.gateway.unruggable.com](https://arbitrum.gateway.unruggable.com) |
+		| Base          | [https://base.gateway.unruggable.com](https://base.gateway.unruggable.com) |
+		| Optimism      | [https://optimism.gateway.unruggable.com](https://optimism.gateway.unruggable.com) |
+		| Linea         | [https://linea.gateway.unruggable.com](https://linea.gateway.unruggable.com) |
+		| Scroll        | [https://scroll.gateway.unruggable.com](https://scroll.gateway.unruggable.com) |
+		| Self          | [https://self.gateway.unruggable.com](https://self.gateway.unruggable.com) |
+  </Tabs.Tab>
+
+	<Tabs.Tab>
+		## Sepolia Gateways
+		| Chain         | Gateway                                                         |
+		|---------------|-----------------------------------------------------------------|
+		| Arbitrum One Sepolia  | [https://arbitrum-sepolia.gateway.unruggable.com](https://arbitrum-sepolia.gateway.unruggable.com) |
+		| Base Sepolia          | [https://base-sepolia.gateway.unruggable.com](https://base-sepolia.gateway.unruggable.com) |
+		| Optimism Sepolia     | [https://optimism-sepolia.gateway.unruggable.com](https://optimism-sepolia.gateway.unruggable.com) |
+		| Linea Sepolia         | [https://linea-sepolia.gateway.unruggable.com](https://linea-sepolia.gateway.unruggable.com) |
+		| Scroll Sepolia        | [https://scroll-sepolia.gateway.unruggable.com](https://scroll-sepolia.gateway.unruggable.com) |
+		| Self Sepolia          | [https://self-sepolia.gateway.unruggable.com](https://self-sepolia.gateway.unruggable.com) |
+
+
+
+		<div class = "info mt-20">
+			<p>**EthGlobal participants..** We recommend that you test your solutions using the **Sepolia *Self Verifier*** which allows for instantaneous verification of **any** contract state on Sepolia using a verifier **also deployed on Sepolia**.</p> 
+		</div>
+	</Tabs.Tab>
+</Tabs>
+
+### Notes 
+
+When developing we reccomend that you utilize our `TrustedVerifier` or our `SelfVerifier` alongside the relevant gateway so as to allow instant verification of data without consideration for finalization times. For more information please see [here](/verifiers/development).

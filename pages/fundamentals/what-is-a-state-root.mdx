@@ -1,19 +1,17 @@
 # State roots
 
-An Ethereum state root is a crucial component of Ethereum's blockchain architecture.
+The state root is a crucial component of Ethereum's blockchain architecture.
 
-1. **Definition**: It's a 256-bit hash that represents the entire state of the Ethereum network at a specific block.
+It is a 256-bit (32 byte) hash that represents the entire state of the Ethereum network at a specific block. It acts as a cryptographic summary of all accounts, balances, contract code, and storage on the Ethereum blockchain.
 
-2. **Purpose**: The state root acts as a cryptographic summary of all accounts, balances, contract code, and storage on the Ethereum network.
+A state root is the root hash of a special data structure called a Merkle Patricia Trie, which efficiently stores all state information. It allows for quick verification of the entire state of the chain without needing to download and process all of its data.
 
-3. **Merkle Patricia Trie**: It's the root hash of a special data structure called a Merkle Patricia Trie, which efficiently stores all state information.
+Each Ethereum block contains a block header that contains its associated state root, When transactions are processed and new blocks created, they modify the state, resulting in a new state root for the next block. This mechanism is fundamental to Ethereum's ability to maintain a secure and verifiable record of all accounts and transactions.
 
-4. **Integrity**: It allows for quick verification of the entire state without needing to download and process all data.
+## Other blockchains
 
-5. **Block headers**: Each Ethereum block contains a state root, ensuring consensus on the network's state.
+Other blockchains such as the Layer 2 [chains](/chains) that we support utilize similar data structures for storing their state data. Some use the same Merkle Patricia Trie whilst others utilize modified or optimized data structures for their specific use case.
 
-6. **Lightweight clients**: Enables light clients to verify transactions without storing the entire blockchain.
+The same concept still applies in all cases - these blockchains have a state root against which the state of a specific data value within a smart contract deployed to that chain can be verified.
 
-7. **State transitions**: When transactions are processed, they modify the state, resulting in a new state root for the next block.
-
-This mechanism is fundamental to Ethereum's ability to maintain a secure and verifiable record of all accounts and transactions.
+Unruggable Gateways works (at a high level) by verifying [proofs of a contracts state](/fundamentals/what-is-an-inclusion-proof) against this state root.

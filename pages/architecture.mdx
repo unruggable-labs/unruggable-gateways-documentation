@@ -6,7 +6,7 @@ The [Unruggable Gateways codebase](https://github.com/unruggable-labs/unruggable
 
 1.	**Your Contract**: builds a `GatewayRequest` that is passed to our [`fetch`](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayFetchTarget.sol#L25) method defined in [`GatewayFetchTarget.sol`](https://github.com/unruggable-labs/unruggable-gateways/blob/main/contracts/GatewayFetchTarget.sol).
 2.	**Offchain Data Handling**: The fetch method uses the [ERC-3668](https://eips.ethereum.org/EIPS/eip-3668) standard and reverts with an `OffchainLookup`, instructing the client to query the Gateway.
-3.	**Response Processing**: The [`fetchCallback`](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayFetchTarget.sol#L51) method processes the response, using a chain-specific [*Verifier*](/verifier-deployments) to validate proofs and return the results to the caller.
+3.	**Response Processing**: The [`fetchCallback`](https://github.com/unruggable-labs/unruggable-gateways/blob/b109adcfe29c50d19efae93129a689a213d692dc/contracts/GatewayFetchTarget.sol#L51) method processes the response, using a chain-specific [*Verifier*](/verifier/deployments) to validate proofs and return the results to the caller.
 
 ## Core Components
 
