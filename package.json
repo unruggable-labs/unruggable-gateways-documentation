@@ -1,1 +1,21 @@
-{"scripts":{"dev":"next","build":"next build","start":"next start"},"dependencies":{"ethers":"^6.13.4","next":"^14.2.4","nextra":"^2.13.4","nextra-theme-docs":"^2.13.4","react":"^18.3.1","react-dom":"^18.3.1"},"devDependencies":{"@types/node":"22.7.6","typescript":"5.6.3"}}
+{
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "ethers": "^6.13.4",
+    "next": "^14.2.4",
+    "nextra": "^2.13.4",
+    "nextra-theme-docs": "^2.13.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.7.6",
+    "husky": "^9.1.7",
+    "typescript": "5.6.3"
+  }
+}

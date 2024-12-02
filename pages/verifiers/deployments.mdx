@@ -1,6 +1,4 @@
-import { shortenAddress } from '../../helpers/helpers'
-import ResolveName from '../../components/ResolveName'
-import { Tabs } from 'nextra/components'
+import DeploymentTabs from '../../components/DeploymentTabs'
 
 # Verifier Deployments
 
@@ -8,39 +6,7 @@ Verifiers are currently deployed on **Ethereum Mainnet** and the **Sepolia Ether
 
 See our [gateways](/gateways) page for details of the URLs of our Mainnet and Sepolia gateway network.
 
-<Tabs items={['Mainnet', 'Sepolia']}>
-  <Tabs.Tab>
-  		## Current Mainnet Deployments
-
-		The current deployments for our verifiers can be found at the following addresses on the **Ethereum Mainnet**:
-
-		| Chain         | Address                                                         |
-		|---------------|-----------------------------------------------------------------|
-		| Arbitrum One  | {<ResolveName name="arbitrum.verifier.unruggable.eth" network="mainnet"/>} |
-		| Base          | {<ResolveName name="base.verifier.unruggable.eth" network="mainnet"/>}    |
-		| Optimism      | {<ResolveName name="optimism.verifier.unruggable.eth" network="mainnet"/>} |
-		| Linea         | {<ResolveName name="linea.verifier.unruggable.eth" network="mainnet"/>}   |
-		| Scroll        | {<ResolveName name="scroll.verifier.unruggable.eth" network="mainnet"/>}  |
-		| Trusted       | {<ResolveName name="trusted.verifier.unruggable.eth" network="mainnet"/>}    |
-		| Self          | {<ResolveName name="self.verifier.unruggable.eth" network="mainnet"/>}    |
-  </Tabs.Tab>
-
-	<Tabs.Tab>
-		## Current Sepolia Deployments
-
-		The current deployments for our verifiers can be found at the following addresses on the **Sepolia testnet**:
-
-		| Chain         | Address                                                         |
-		|---------------|-----------------------------------------------------------------|
-		| Arbitrum One Sepolia  | {<ResolveName name="arbitrum-sepolia.verifier.unruggable.eth" network="sepolia"/>} |
-		| Base Sepolia          | {<ResolveName name="base-sepolia.verifier.unruggable.eth" network="sepolia"/>}    |
-		| Optimism Sepolia     | {<ResolveName name="optimism-sepolia.verifier.unruggable.eth" network="sepolia"/>} |
-		| Linea Sepolia         | {<ResolveName name="linea-sepolia.verifier.unruggable.eth" network="sepolia"/>}   |
-		| Scroll Sepolia        | {<ResolveName name="scroll-sepolia.verifier.unruggable.eth" network="sepolia"/>}  |
-		| Trusted Sepolia          | {<ResolveName name="trusted-sepolia.verifier.unruggable.eth" network="sepolia"/>}    |
-		| Self Sepolia          | {<ResolveName name="self-sepolia.verifier.unruggable.eth" network="sepolia"/>}    |
-	</Tabs.Tab>
-</Tabs>
+<DeploymentTabs />
 
 ## Rollup Contract Addresses
 

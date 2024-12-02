@@ -14,32 +14,47 @@ async function resolveName(provider, name, chainId = 60) {
 
 import { useState, useEffect } from 'react';
 import { JsonRpcProvider } from 'ethers';
+import OwnableOwner from './OwnableOwner';
 
-export default function ResolveName({ name, network }) {
-  const [resolvedAddress, setResolvedAddress] = useState(false);
+export default function ResolveName({ name, network, displayOwner = false }) {
 
-  useEffect(() => {
-    async function doResolve() {
-        const provider = new JsonRpcProvider(`https://${network}.infura.io/v3/6a3931a773b843bbaeae62c92932a575`);
-        const result = await resolveName(provider, name);
-        setResolvedAddress(result);
-    }
+    const [resolvedAddress, setResolvedAddress] = useState(false);
 
-    doResolve();
-  }, []);
+    const explorerPrepend = network === "mainnet" ? "" : `${network}.`;
+    const etherscanLink = resolvedAddress ? `https://${explorerPrepend}etherscan.io/address/${resolvedAddress}` : "";
+    const ethtoolsLink = `https://ethtools.com/ethereum-name-service/ens-whois/${name}`;
 
-  return (
-    <div className='nx-text-center'>
-        <p className = "nx-text-md">
-            <a href={`https://ethtools.com/ethereum-name-service/ens-whois/${name}`}>{name}</a>
-        </p>
-        {resolvedAddress === false ? (
-            <span class="loader"></span>
-        ):(
-            <p className = "nx-text-xs">            
-                <a href={`https://etherscan.io/address/${resolvedAddress}`}>{resolvedAddress}</a>
+    useEffect(() => {
+        async function doResolve() {
+            const provider = new JsonRpcProvider(`https://${network}.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_API_KEY}`);
+            const result = await resolveName(provider, name);
+            setResolvedAddress(result);
+        }
+
+        doResolve();
+    }, []);
+
+    return (
+        <div className='nx-text-center'>
+            <p className = "nx-text-md">
+                <a href={network == "mainnet" ? ethtoolsLink : etherscanLink}>{name}</a>
             </p>
-        )}
-    </div>
-  );
+            {resolvedAddress === false ? (
+            <span className="loader"></span>
+            ):(
+                <>
+                    {resolvedAddress !== null && (
+                        <>
+                            <p className = "nx-text-xs">            
+                                <a href={etherscanLink}>{resolvedAddress}</a>
+                            </p>
+                            {displayOwner && (
+                                <OwnableOwner address={resolvedAddress} network={network} />
+                            )}
+                        </>
+                    )}
+                </>
+            )}
+        </div>
+    );
 }

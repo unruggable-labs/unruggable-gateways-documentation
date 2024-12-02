@@ -1,0 +1,40 @@
+#!/bin/sh
+
+prechecks() {
+  # Patterns for sensitive keys
+  ETH_PRIVATE_KEY_PATTERN="\b(0x)?[a-fA-F0-9]{64}\b"  # Ethereum private key
+  INFURA_KEY_PATTERN="\b[a-fA-F0-9]{32}\b"            # Infura API key
+  ALCHEMY_KEY_PATTERN="\b[a-zA-Z0-9\-]{32}\b"         # Alchemy API key
+
+  # Scan staged files
+  FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+  for FILE in $FILES; do
+    # Skip binary files
+    if file "$FILE" | grep -qE 'text'; then
+      if grep -E "$ETH_PRIVATE_KEY_PATTERN" "$FILE"; then
+        echo "Error: Ethereum private key detected in $FILE"
+        return 1
+      fi
+      if grep -E "$INFURA_KEY_PATTERN" "$FILE"; then
+        echo "Error: Infura API key detected in $FILE"
+        return 1
+      fi
+      if grep -E "$ALCHEMY_KEY_PATTERN" "$FILE"; then
+        echo "Error: Alchemy API key detected in $FILE"
+        return 1
+      fi
+    fi
+  done
+
+  return 0
+}
+
+# Run the prechecks function
+if ! prechecks; then
+  echo "Commit aborted. Prechecks failed."
+  exit 1
+fi
+
+# Proceed with the commit
+exit 0
