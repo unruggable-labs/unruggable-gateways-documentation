@@ -1,7 +1,13 @@
+import LightDarkImage from './components/LightDarkImage'
+
 export default {
   logo: (
     <>
-      <img src="/images/logo-black.png" alt="Unruggable logo" style={{"width":"30px", marginRight: "5px"}} />
+      <LightDarkImage 
+        light = "/images/logo-black.png" 
+        dark = "/images/logo-white.png" 
+        alt = "Unruggable Logo"
+        style={{"width":"30px", marginRight: "5px"}} />
       <span>Gateway Documentation</span>
     </>
   ),

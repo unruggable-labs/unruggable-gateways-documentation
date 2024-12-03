@@ -1,7 +1,7 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
-export default function LightDarkImage({light, dark, alt}) {
+export default function LightDarkImage({light, dark, alt, style = {}}) {
   const { theme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
@@ -16,5 +16,5 @@ export default function LightDarkImage({light, dark, alt}) {
     ? dark
     : light;
 
-  return <img src={imageSrc} alt={alt} className='centered-image' />;
+  return <img src={imageSrc} alt={alt} className='centered-image' style={style} />;
 }
