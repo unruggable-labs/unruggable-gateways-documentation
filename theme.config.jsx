@@ -20,7 +20,7 @@ export default {
     link: 'https://github.com/unruggable-labs/unruggable-gateways/'
   },
   chat: {
-    link: 'https://discord.gg/rVCaAvqzCA'
+    link: 'https://discord.gg/QtrHVK3U8c'
   },
   useNextSeoProps() {
     return {
