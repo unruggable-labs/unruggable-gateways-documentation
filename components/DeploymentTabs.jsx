@@ -70,7 +70,7 @@ export default function DeploymentTabs() {
                 <Tabs.Tab>
                     <h2 className={h2Class}>Current Mainnet Deployments</h2>
 
-                    <p>The current deployments for our verifiers can be found at the following addresses on the **Ethereum Mainnet**:</p>
+                    <p>The current deployments for our verifiers can be found at the following addresses on the <span className='nx-font-bold'>Ethereum Mainnet</span>:</p>
 
                     <table className={tableClass}>
                         <thead>
@@ -93,7 +93,7 @@ export default function DeploymentTabs() {
                 <Tabs.Tab>
                     <h2 className={h2Class}>Current Sepolia Deployments</h2>
 
-                    <p>The current deployments for our verifiers can be found at the following addresses on the **Sepolia testnet**:</p>
+                    <p>The current deployments for our verifiers can be found at the following addresses on the <span className='nx-font-bold'>Sepolia testnet</span>:</p>
 
                     <table className={tableClass}>
                         <thead>
