@@ -11,7 +11,7 @@ const mainnetDeployments = [
     {"chain": "Arbitrum One", "address": "arbitrum.verifier.unruggable.eth"},
     {"chain": "Base", "address": "base.verifier.unruggable.eth"},
     {"chain": "Optimism", "address": "optimism.verifier.unruggable.eth"},
-    {"chain": "Linea", "address": "linea.verifier.unruggable.eth"},
+    {"chain": "Linea", "address": "linea.verifier.unruggable.eth", "notes": (<>Linea verifiers depend on their <a href='https://github.com/Linea-team/shomei' class="nx-underline" target="_blank">shomei</a> nodes which are unreliable.</>)},
     {"chain": "Scroll", "address": "scroll.verifier.unruggable.eth"},
     {"chain": "Self", "address": "self.verifier.unruggable.eth"},
 ];
@@ -20,7 +20,7 @@ const sepoliaDeployments = [
     {"chain": "Arbitrum One", "address": "arbitrum-sepolia.verifier.unruggable.eth"},
     {"chain": "Base", "address": "base-sepolia.verifier.unruggable.eth"},
     {"chain": "Optimism", "address": "optimism-sepolia.verifier.unruggable.eth"},
-    {"chain": "Linea", "address": "linea-sepolia.verifier.unruggable.eth"},
+    {"chain": "Linea", "address": "linea-sepolia.verifier.unruggable.eth", "notes": (<>Linea verifiers depend on their <a href='https://github.com/Linea-team/shomei' class="nx-underline" target="_blank">shomei</a> nodes which are unreliable.</>)},
     {"chain": "Scroll", "address": "scroll-sepolia.verifier.unruggable.eth"},
     {"chain": "Trusted", "address": "trusted-sepolia.verifier.unruggable.eth"},
     {"chain": "Self", "address": "self-sepolia.verifier.unruggable.eth"},
@@ -76,14 +76,17 @@ export default function DeploymentTabs() {
                         <thead>
                             <tr className={trClass}>
                                 <th className={thClass}>Chain</th>
-                                <th className={thClass}>Address</th>    
+                                <th className={thClass}>Address</th> 
+                                <th className={thClass} style={{width: "200px"}}>Notes</th>      
                             </tr>
                         </thead>
                         <tbody>
-                            {mainnetDeployments.map(({chain, address}) => (
+                            {mainnetDeployments.map(({chain, address, notes}) => (
                                 <tr key={`mainnet-${chain}`} className={trClass}>
                                     <td className={tdClass}>{chain}</td>
                                     <td className={tdClass}><ResolveName name={address} network="mainnet"/></td>
+                                    <td className={tdClass}>{notes ? notes : "-"}</td>
+
                                 </tr>
                             ))} 
                         </tbody>
@@ -100,13 +103,15 @@ export default function DeploymentTabs() {
                             <tr className={trClass}>
                                 <th className={thClass}>Chain</th>
                                 <th className={thClass}>Address</th>    
+                                <th className={thClass} style={{width: "200px"}}>Notes</th>    
                             </tr>
                         </thead>
                         <tbody>
-                            {sepoliaDeployments.map(({chain, address}) => (
+                            {sepoliaDeployments.map(({chain, address, notes}) => (
                                 <tr key={`sepolia-${chain}`} className={trClass}>
                                     <td className={tdClass}>{chain}</td>
                                     <td className={tdClass}><ResolveName name={address} network="sepolia"/></td>
+                                    <td className={tdClass}>{notes ? notes : "-"}</td>
                                 </tr>
                             ))} 
                         </tbody>
