@@ -4,6 +4,23 @@ We have built a number of verifiers that allow for quick iteration during the de
 
 Deployments for these verifiers on both mainnet and Sepolia can be found [here](/verifiers/deployments).
 
+## InteractiveVerifier
+
+The `InteractiveVerifier` is a simple verifier contract, primarily intended for development and testing.
+It serves as its own rollup contract and exposes the function `function setStateRoot(uint256 index, bytes32 stateRoot) external onlyOwner` which allows the owner of the contract to update the state root to align it with the latest known state root on the L2 chain.
+
+This is useful when using development environments such as Hardhat and Anvil where automining functionality, and the lack of an operational sequencer means that L2 state is not synchronized with the L1 chain.
+
+It is prover agnostic meaning that you 
+
+## UncheckedVerifier
+
+An `UncheckedVerifier` is one that interacts with an `UncheckedProver` to return raw values rather than proofs. That is to say, there is no verification of any proofs.
+
+This kind of verifier is useful for development and testing in environments where `eth_getProof` is not supported.
+For example hardhat [does not currently support it](https://hardhat.org/hardhat-network/docs/reference#eth_getproof).
+
+
 ## TrustedVerifier
 
 A `TrustedVerifier` verifies that data returned from a trusted gateway has been signed with the expected private key.
